@@ -269,7 +269,37 @@ public class PlayController{
         }
 
         //set direction then spread gems of player 1
+        for (int i = 0; i < cellsOnPlayer1.length; i++){
+            int index = i;
+            Pane pane = listPaneOnPlayer1.get(index);
+            List<Node> children = pane.getChildren();
+            for (Node child : children) {
+                if (child instanceof ImageView) {
+                    ImageView imageView = (ImageView) child;
+                    imageView.setOnMouseClicked(event1 -> {
+                        System.out.println("Direction clicked");
 
+                        // Set the direction
+                        if (imageView.getId().startsWith("btnCCL")) {
+                            player.setDirection(0);
+                        } else if (imageView.getId().startsWith("btnCL")) {
+                            player.setDirection(1);
+                        }
+
+                        //spread gems
+                        player.spreadGems("player1",board.getBoard()[index+1], player.getDirection());
+
+                        //fake end game
+                        board.getBoard()[0].setEmpty();
+                        board.getBoard()[6].setEmpty();
+
+                        //check end game
+                        if (board.endGame()){
+                            System.out.println("end game");
+                            player.assembleSmallGems();
+                            scorePlayer2.setText(Integer.toString(player.getScore("player2")));
+                            endGameScreen.setVisible(true);
+                            scorePlayer1.setText(Integer.toString(player.getScore("player1")));
 
                             
 
