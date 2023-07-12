@@ -15,7 +15,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
+import model.board.Board;
+import model.board.Cell;
+import model.player.Player;
 
 public class PlayController{
     @FXML
@@ -254,7 +256,16 @@ public class PlayController{
                     
                 }
                 else{
-
+                    // show direction
+                    showDirection(pane);
+                    System.out.println("Cell clicked");
+                
+                    for (int j=0; j < cellsOnPlayer1.length; j++){
+                        Pane paneAround = listPaneOnPlayer1.get(j);
+                        if (j != index ){
+                            paneAround.setDisable(true);
+                        }
+                        
                     }
 
                 }
@@ -269,7 +280,7 @@ public class PlayController{
         }
 
         //set direction then spread gems of player 1
-        for (int i = 0; i < cellsOnPlayer1.length; i++){
+        for (int i=0; i < cellsOnPlayer1.length; i++){
             int index = i;
             Pane pane = listPaneOnPlayer1.get(index);
             List<Node> children = pane.getChildren();
