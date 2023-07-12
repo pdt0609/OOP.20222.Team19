@@ -315,7 +315,11 @@ public class PlayController{
             Pane pane = listPaneOnPlayer2.get(i);
             pane.setOnMouseClicked(event2 -> {
 
-              
+              if (cellsOnPlayer2[index].getGemList().size() == 0){
+                    pane.setDisable(false);
+                    System.out.println("Cell could not be clicked");
+                    
+                }
                 else{
                     // show direction
                     showDirection(pane);
@@ -372,18 +376,7 @@ public class PlayController{
                         }
 
                         //display number of gems
-                        numGemsCell00.setText(Integer.toString(board.getBoard()[0].getGemList().size()));
-                        numGemsCell01.setText(Integer.toString(board.getBoard()[1].getGemList().size()));
-                        numGemsCell02.setText(Integer.toString(board.getBoard()[2].getGemList().size()));
-                        numGemsCell03.setText(Integer.toString(board.getBoard()[3].getGemList().size()));
-                        numGemsCell04.setText(Integer.toString(board.getBoard()[4].getGemList().size()));
-                        numGemsCell05.setText(Integer.toString(board.getBoard()[5].getGemList().size()));
-                        numGemsCell06.setText(Integer.toString(board.getBoard()[6].getGemList().size()));
-                        numGemsCell07.setText(Integer.toString(board.getBoard()[7].getGemList().size()));
-                        numGemsCell08.setText(Integer.toString(board.getBoard()[8].getGemList().size()));
-                        numGemsCell09.setText(Integer.toString(board.getBoard()[9].getGemList().size()));
-                        numGemsCell10.setText(Integer.toString(board.getBoard()[10].getGemList().size()));
-                        numGemsCell11.setText(Integer.toString(board.getBoard()[11].getGemList().size()));
+
 
                         
 
@@ -405,14 +398,7 @@ public class PlayController{
         // run
         Random rand = new Random();
         int randTurn = rand.nextInt(2) + 1;
-        player.setTurn(randTurn);
-        if (player.getTurn() == 1){
-            turnPlayer1.setVisible(true);
-            turnPlayer2.setVisible(false);
-            //set able for cells 1
-            for (int i=0; i < board.getNumSquares()/2; i++) {
-                Pane pane = listPaneOnPlayer1.get(i);
-                pane.setDisable(false);
+
             }
 
             //set disable for cells 2
