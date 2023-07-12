@@ -8,7 +8,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-
+import model.board.Board;
+import model.player.Player;
 import javafx.scene.Node;
 
 public class HomeController {
@@ -28,7 +29,8 @@ public class HomeController {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/Play.fxml"));
 
-                
+                Board board = new Board();
+                Player player = new Player("player1", "player2", board);
                 fxmlLoader.setController(new PlayController(player, board));
                 Parent root = fxmlLoader.load();
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
