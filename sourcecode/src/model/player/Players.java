@@ -5,6 +5,7 @@ import java.util.List;
 import model.board.Board;
 import model.board.Cell;
 import model.board.HalfCircle;
+import model.board.Pickable;
 import model.board.Square;
 import model.gem.*;
 
@@ -124,13 +125,13 @@ public class Players { //set action of players with board. Do not make for each 
                 //check contuinity
                 stopCell = board.getCells()[(locationChosen + numberOfGems) % totalCell];
                 Cell nextStopCell = board.getNextCellClockwise(stopCell);
-                if (!(nextStopCell.isEmpty()) && (nextStopCell instanceof Square)){
+                if (!(nextStopCell.isEmpty()) && (nextStopCell instanceof Pickable)){  //using interface to force pick
                     spreadGems(player,nextStopCell, direction);
                 }
                 else if ((nextStopCell.isEmpty()) && (board.getNextCellClockwise(nextStopCell).isEmpty())){
                     //switch turn
                 }
-                else if (!(nextStopCell.isEmpty()) && (nextStopCell instanceof HalfCircle)){
+                else if (!(nextStopCell.isEmpty()) && !(nextStopCell instanceof Pickable)){
                     //switch turn
                 }
                 else{
@@ -143,9 +144,7 @@ public class Players { //set action of players with board. Do not make for each 
                     nextStopCell = board.getNextCellClockwise(earnedCell);
                     //switch turn
                     }
-
                 }
-    
             }
 
             else if (direction == 0) { //counter clockwise
@@ -160,12 +159,12 @@ public class Players { //set action of players with board. Do not make for each 
                 //check contuinity
                 stopCell = board.getCells()[(locationChosen - numberOfGems + totalCell) % totalCell];
                 Cell nextStopCell = board.getNextCellCounterClockwise(stopCell);
-                if (!(nextStopCell.isEmpty()) && (nextStopCell instanceof Square)) {
+                if (!(nextStopCell.isEmpty()) && (nextStopCell instanceof Pickable)) {
                     spreadGems(player, nextStopCell, direction);
                     
                 } else if ((nextStopCell.isEmpty()) && (board.getNextCellCounterClockwise(nextStopCell).isEmpty())) {
                     //switch turn
-                } else if (!(nextStopCell.isEmpty()) && (nextStopCell instanceof HalfCircle)) {
+                } else if (!(nextStopCell.isEmpty()) && !(nextStopCell instanceof Pickable)) {
                     //switch turn
                 }
                 else{

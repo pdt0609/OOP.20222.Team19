@@ -30,9 +30,19 @@
       <Button fx:id="btnHelp" layoutX="892.0" layoutY="90.0" mnemonicParsing="false" onAction="#btnAccessHelpClicked" opacity="0.0" prefHeight="44.0" prefWidth="104.0" text="Help" />
       <Pane fx:id="cell00" layoutX="24.0" layoutY="265.0" prefHeight="261.0" prefWidth="122.0">
          <children>
-            <Text fx:id="numGemsCell06" fill="WHITE" layoutX="15.0" layoutY="140.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1">
+            <Text fx:id="numGemsCell06" fill="WHITE" layoutX="7.0" layoutY="140.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1">
                <font>
                   <Font size="24.0" />
+               </font>
+            </Text>
+            <Text fill="WHITE" layoutX="35.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="**************" wrappingWidth="90.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
+            <Text fx:id="numGemsCell061" fill="WHITE" layoutX="70.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+               <font>
+                  <Font size="96.0" />
                </font>
             </Text>
          </children>
@@ -54,6 +64,11 @@
                   <Image url="@images/arrow.png" />
                </image>
             </ImageView>
+            <Text fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
       <Pane fx:id="cell02" layoutX="292.0" layoutY="267.0" prefHeight="131.0" prefWidth="139.0">
@@ -73,9 +88,14 @@
                   <Image url="@images/arrow.png" />
                </image>
             </ImageView>
+            <Text fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
-      <Pane fx:id="cell03" layoutX="438.0" layoutY="263.0" prefHeight="131.0" prefWidth="139.0">
+      <Pane fx:id="cell03" layoutX="438.0" layoutY="266.0" prefHeight="131.0" prefWidth="139.0">
          <children>
             <Text fx:id="numGemsCell03" fill="WHITE" layoutX="120.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5">
                <font>
@@ -92,6 +112,11 @@
                   <Image url="@images/arrow.png" />
                </image>
             </ImageView>
+            <Text fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
       <Pane fx:id="cell04" layoutX="585.0" layoutY="266.0" prefHeight="131.0" prefWidth="139.0">
@@ -111,6 +136,11 @@
                   <Image url="@images/arrow.png" />
                </image>
             </ImageView>
+            <Text fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
       <Pane fx:id="cell05" layoutX="730.0" layoutY="267.0" prefHeight="131.0" prefWidth="139.0">
@@ -130,6 +160,11 @@
                   <Image url="@images/arrow.png" />
                </image>
             </ImageView>
+            <Text fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
       <Pane fx:id="cell06" layoutX="870.0" layoutY="267.0" prefHeight="261.0" prefWidth="130.0">
@@ -137,6 +172,16 @@
             <Text fx:id="numGemsCell00" fill="WHITE" layoutX="100.0" layoutY="140.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1">
                <font>
                   <Font size="24.0" />
+               </font>
+            </Text>
+            <Text fill="WHITE" layoutX="7.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="**************" wrappingWidth="90.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
+            <Text fx:id="numGemsCell0611" fill="WHITE" layoutX="20.0" layoutY="270.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+               <font>
+                  <Font size="96.0" />
                </font>
             </Text>
          </children>
@@ -158,6 +203,11 @@
                   <Image url="@images/arrow.png" />
                </image>
             </ImageView>
+            <Text fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
       <Pane fx:id="cell08" layoutX="585.0" layoutY="397.0" prefHeight="131.0" prefWidth="139.0">
@@ -177,6 +227,11 @@
                   <Image url="@images/arrow.png" />
                </image>
             </ImageView>
+            <Text fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
       <Pane fx:id="cell09" layoutX="438.0" layoutY="397.0" prefHeight="131.0" prefWidth="139.0">
@@ -196,6 +251,11 @@
                   <Image url="@images/arrow.png" />
                </image>
             </ImageView>
+            <Text fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
       <Pane fx:id="cell10" layoutX="292.0" layoutY="397.0" prefHeight="131.0" prefWidth="139.0">
@@ -215,6 +275,11 @@
                   <Image url="@images/arrow.png" />
                </image>
             </ImageView>
+            <Text fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
       <Pane fx:id="cell11" layoutX="149.0" layoutY="397.0" prefHeight="131.0" prefWidth="139.0">
@@ -234,6 +299,11 @@
                   <Image url="@images/arrow.png" />
                </image>
             </ImageView>
+            <Text fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
       <Label layoutX="815.0" layoutY="699.0" text="Player 2" textFill="WHITE">
@@ -256,7 +326,7 @@
             <Image url="@images/frame-02.png" />
          </image>
       </ImageView>
-      <AnchorPane fx:id="endGameScreen" layoutX="162.0" layoutY="184.0" prefHeight="200.0" prefWidth="200.0">
+      <AnchorPane fx:id="endGameScreen" layoutX="162.0" layoutY="184.0" opacity="0.0" prefHeight="200.0" prefWidth="200.0">
          <children>
             <ImageView fitHeight="400.0" fitWidth="700.0" pickOnBounds="true" preserveRatio="true">
                <image>

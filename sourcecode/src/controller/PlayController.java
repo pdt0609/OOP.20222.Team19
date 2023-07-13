@@ -432,12 +432,25 @@ public class PlayController{
     public void setDisplay(){
         for (int i=0; i < board.getCells().length; i++){
             Pane pane = paneList.get(i);
-            Text numberOfGems = (Text) pane.getChildren().get(0); // downcast
-            numberOfGems.setText(Integer.toString(board.getCells()[i].getGemList().size()));
+            
+            if ((i == 0) || (i == 6)){
+                Text numberOfGems = (Text) pane.getChildren().get(0);
+                numberOfGems.setText(Integer.toString(board.getCells()[i].getGemList().size()));
+                Text numberOfSmallGems = (Text) pane.getChildren().get(1);
+                numberOfSmallGems.setText("*".repeat(board.getCells()[i].getSmallGems().size()));
+                Text numberOfBigGems = (Text) pane.getChildren().get(2);
+                numberOfBigGems.setText("O".repeat(board.getCells()[i].getBigGems().size()));
+                
+             
+                
+
+            } // downcast
+            
+
 
         }
-        scorePlayer2.setText(Integer.toString(players.getScore("player2")));
-        scorePlayer1.setText(Integer.toString(players.getScore("player1")));
+        scorePlayer2.setText(Integer.toString(players.getScore(player2Name)));
+        scorePlayer1.setText(Integer.toString(players.getScore(player1Name)));
     }
 
 }
