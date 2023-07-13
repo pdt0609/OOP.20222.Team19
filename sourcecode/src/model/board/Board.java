@@ -121,4 +121,24 @@ public class Board { // is composed of cells, it can interact with cells/all met
         return true;
     }
 
+    public boolean checkNoGemsOnSide(String player){ //if on player side, each square does not have any gems return true
+        if (player.equals("player1")){
+            for (Cell cell : this.getPlayer1Cells()){
+                if (cell.getGemList().size() > 0){
+                    return false;
+                }
+            }
+        }
+        else if (player.equals("player2")){
+            for (Cell cell : this.getPlayer2Cells()){
+                if (cell.getGemList().size() > 0){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+
+    }
+
 }

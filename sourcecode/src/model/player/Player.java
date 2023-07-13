@@ -6,7 +6,7 @@ import model.board.Board;
 import model.board.Cell;
 import model.board.HalfCircle;
 import model.board.Square;
-import model.gem.Gem;
+import model.gem.*;
 
 public class Player { //set action with board
     private int score1 = 0;
@@ -79,6 +79,24 @@ public class Player { //set action with board
             this.score2 = this.score2 + earnedScore;
         }
     }
+
+    public void reduceScore(String player){
+        if (player.equals(player1)){
+            this.score1 = this.score1 - 5;
+            for (int i = 0; i< 5; i++){
+                Gem smallGem = new SmallGem();
+                board.getCells()[i+1].addGem(smallGem);
+            }
+        } 
+        else if (player.equals(player2)){
+            this.score2 = this.score2 - 5;
+            for (int i = 0; i< 5; i++){
+                Gem smallGem = new SmallGem();
+                board.getCells()[i+board.getNumSquares()/2+2].addGem(smallGem);
+            }
+        }
+    }
+    
 
     public int getScore(String player){
         if (player.equals(player1)){

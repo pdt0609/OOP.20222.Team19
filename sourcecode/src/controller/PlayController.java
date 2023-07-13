@@ -217,7 +217,22 @@ public class PlayController{
 
                     if (board.getCells()[index].getGemList().size() == 0){
                         pane.setDisable(false);
+                        if (player.getTurn() == 1){
+                            if (board.checkNoGemsOnSide("player1")){
+                            player.reduceScore("player1");
+                            this.setDisplay();
+                            }
+
+                        }
+                        else if (player.getTurn() == 2){
+                            if (board.checkNoGemsOnSide("player2")){
+                            player.reduceScore("player2");
+                            this.setDisplay();
+                            }
+                        }
                         System.out.println("Cell could not be clicked");
+                        
+            
                     }
                     else{
                         System.out.println("Cell clicked");
@@ -265,8 +280,8 @@ public class PlayController{
                             }
 
                             //fake end game
-                            board.getCells()[0].setEmpty();
-                            board.getCells()[6].setEmpty();
+                            // board.getCells()[0].setEmpty();
+                            // board.getCells()[6].setEmpty();
 
                             //check end game
                             if (board.endGame()){
@@ -320,6 +335,8 @@ public class PlayController{
                         pane.setDisable(true);
                 }
             }
+            
+            
 
         }else{
             turnPlayer1.setVisible(false);
@@ -334,6 +351,7 @@ public class PlayController{
                         pane.setDisable(false);
                 }
             }
+            
             
         }
 
