@@ -78,7 +78,7 @@ public class HomeController {
 
     }
     @FXML
-    private void initialize() {
+    public void initialize() {
         btnStart.setOnAction(event -> {
             System.out.println("Start button pressed");
              // Close the current window (optional)
@@ -103,7 +103,7 @@ public class HomeController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            
+
         });
     }
 }
