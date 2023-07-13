@@ -1,5 +1,7 @@
 package model.player;
 
+import java.util.List;
+
 import model.board.Board;
 import model.board.Cell;
 import model.board.HalfCircle;
@@ -7,8 +9,8 @@ import model.board.Square;
 import model.gem.Gem;
 
 public class Player { //set action with board
-    private static int score1 = 0;
-    private static int score2 = 0;
+    private int score1 = 0;
+    private int score2 = 0;
     private String player1;
     private String player2;
     private int turn;
@@ -66,51 +68,51 @@ public class Player { //set action with board
                 sum += gem.getValue();
             }
         }
-        earnedCell.setEmpty();
         return sum;
     }
     
-
     public void computeScore(String player, int earnedScore){
         if (player.equals(player1)){
-            score1 = score1 + earnedScore;
+            this.score1 = this.score1 + earnedScore;
         } 
         else if (player.equals(player2)){
-            score2 = score2 + earnedScore;
+            this.score2 = this.score2 + earnedScore;
         }
     }
 
-    public int getScore(String player1){
-        if (player1.equals(player1)){
-            return score1;
+    public int getScore(String player){
+        if (player.equals(player1)){
+            return this.score1;
         }
-        else if (player1.equals(player2)){
-            return score2;
+        else if (player.equals(player2)){
+            return this.score2;
         }
         return 0;
     }
 
-    public void spreadGems(String player, Cell cellChosen, int direction){
-        Cell stopCell = null;
-        
 
+    public void spreadGems(String player, Cell cellChosen, int direction){
+            Cell stopCell;
             int locationChosen = cellChosen.getLocation();
+            List<Gem> gemList = cellChosen.getGemList();
+            int numberOfGems = gemList.size();
+            int totalCell = board.getCells().length;
+
             if (direction == 1){ //clockwise
                 
                 //spread first round
-                for (int i = locationChosen + 1; i <= locationChosen + 5; i++) {
-                    int index = i % board.getBoard().length; // Wrap around the index
-                    Gem movedGem = cellChosen.moveGem();
-                    board.getBoard()[index].addGem(movedGem);
+                for (int i = 0; i < numberOfGems; i++) {
+                    int index = (locationChosen + i + 1) % totalCell; // Calculate the index correctly
+                    board.getCells()[index].addGem(gemList.get(i));
                 }
                 cellChosen.setEmpty();
 
                 //check contuinity
-                stopCell = board.getBoard()[(locationChosen + 5)% board.getBoard().length];
+                stopCell = board.getCells()[(locationChosen + numberOfGems) % totalCell];
                 Cell nextStopCell = board.getNextCellClockwise(stopCell);
                 if (!(nextStopCell.isEmpty()) && (nextStopCell instanceof Square)){
                     spreadGems(player,nextStopCell, direction);
-                    nextStopCell.setEmpty();
+                    // nextStopCell.setEmpty();
                 }
                 else if ((nextStopCell.isEmpty()) && (board.getNextCellClockwise(nextStopCell).isEmpty())){
 
@@ -123,45 +125,32 @@ public class Player { //set action with board
                     while ((nextStopCell.isEmpty()) && !(board.getNextCellClockwise(nextStopCell).isEmpty()) ){
                     Cell earnedCell = board.getNextCellClockwise(nextStopCell);
                     int earnedScore = earnScore(earnedCell);
+                    // System.out.println(earnedScore);
+                    earnedCell.setEmpty();
                     computeScore(player,earnedScore);
                     nextStopCell = board.getNextCellClockwise(earnedCell);
                     //switch turn
                     }
 
                 }
-               
+    
             }
 
             else if (direction == 0) { //counter clockwise
-                // Cell stopCell;
+    
                 //spread first round
-                for (int i = locationChosen - 1; i > locationChosen - 6; i--) {
-                    if (i >= 0) {
-                        Gem movedGem = cellChosen.moveGem();
-                        board.getBoard()[i].addGem(movedGem);
-                    }
-                    else{
-                        int index = board.getNumHalfCircles() + board.getNumSquares() + i;
-                        Gem movedGem = cellChosen.moveGem();
-                        board.getBoard()[index].addGem(movedGem);
-                    }
-                    
+                for (int i = 0; i < numberOfGems; i++) {
+                    int index = (locationChosen - i - 1 + totalCell) % totalCell; // Calculate the index correctly
+                    board.getCells()[index].addGem(gemList.get(i));
                 }
-
                 cellChosen.setEmpty();
+
                 //check contuinity
-                if (locationChosen - 5 >= 0){
-                    stopCell = board.getBoard()[locationChosen - 5];
-                }
-                else{
-                    int index = board.getNumHalfCircles() + board.getNumSquares() + locationChosen - 5;
-                    stopCell = board.getBoard()[index];
-                }
-                
+                stopCell = board.getCells()[(locationChosen - numberOfGems + totalCell) % totalCell];
                 Cell nextStopCell = board.getNextCellCounterClockwise(stopCell);
                 if (!(nextStopCell.isEmpty()) && (nextStopCell instanceof Square)) {
                     spreadGems(player, nextStopCell, direction);
-                    nextStopCell.setEmpty();
+                    // nextStopCell.setEmpty();
                 } else if ((nextStopCell.isEmpty()) && (board.getNextCellCounterClockwise(nextStopCell).isEmpty())) {
 
                     //switch turn
@@ -174,7 +163,9 @@ public class Player { //set action with board
                         Cell earnedCell = board.getNextCellCounterClockwise(nextStopCell);
                         if (earnedCell.getGemList().size() > 0){
                             int earnedScore = earnScore(earnedCell);
-                            computeScore(player, earnedScore);
+                            earnedCell.setEmpty();
+                            // System.out.println(earnedScore);
+                            this.computeScore(player, earnedScore);
                             nextStopCell = board.getNextCellCounterClockwise(earnedCell);
 
                         }
@@ -182,6 +173,25 @@ public class Player { //set action with board
                     }
                 }
             }
+        }
+
+        public void assembleSmallGems(){
+            
+            for (int i = 0; i < board.getNumSquares()/2; i++){
+                Cell cell1 = board.getPlayer1Cells()[i];
+                int earnedScore1 = earnScore(cell1);
+                cell1.setEmpty();
+                this.computeScore(this.player1, earnedScore1);
+
+                Cell cell2 = board.getPlayer2Cells()[i];
+                int earnedScore2 = earnScore(cell2);
+                cell2.setEmpty();
+               
+                this.computeScore(this.player2, earnedScore2);
+                
+            }
+            
+           
         }
 
     }
