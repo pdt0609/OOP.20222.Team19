@@ -21,7 +21,7 @@ public abstract class Cell {
     }
 
     public int getNumberOfGems() {
-        return numberOfGems;
+        return numberOfGems; 
     }
 
     public void addGem(Gem gem) {
