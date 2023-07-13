@@ -86,7 +86,6 @@ public class HomeController {
             currentStage.close();
 
             //open a new window to start a game
-
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/Play.fxml"));
 
@@ -104,6 +103,7 @@ public class HomeController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            
         });
     }
 }

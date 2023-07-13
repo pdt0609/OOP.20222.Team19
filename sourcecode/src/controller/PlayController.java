@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -19,56 +18,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.board.Board;
-import model.board.Cell;
 import model.player.Player;
 
 public class PlayController{
-	@FXML
-    private Button btnAccessHelp;	
-    @FXML
-    void btnAccessHelpClicked(ActionEvent event) {
-        try {
-            final String HELP_SCREEN_FILE_PATH = "/view/HelpScreen.fxml";
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(HELP_SCREEN_FILE_PATH));
-            fxmlLoader.setController(new HelpScreenController());
-            Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-            // set new scene for current stage
-            stage.setScene(new Scene(root));
-            stage.setTitle("Help Screen");
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
-
-    }
-	
-	@FXML
-    private Button btnExit;
-
-    @FXML
-    public void btnBackFromHomeControllerClicked(ActionEvent event) {
-        try {
-            // TODO while playing: just a pop-up
-
-            final String INTRO_SCREEN_FILE_PATH = "/view/Home.fxml";
-
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(INTRO_SCREEN_FILE_PATH));
-            Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            stage.setScene(new Scene(root));
-            stage.setTitle("Intro Screen");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-	
-	
     @FXML
     private Button btnHelp;
 
@@ -139,22 +92,68 @@ public class PlayController{
     @FXML
     private Text winnerScore;
 
-    private List<Pane> paneList = Arrays.asList(cell00, cell01, cell02, cell03, cell04,cell05,cell06,cell07,cell08,cell09,cell10,cell11); // not exist -> need to declare
+
+
+    private List<Pane> paneList; // not exist -> need to declare
     private Player player;
     private Board board;
-    int numberOfCells = board.getNumSquares() +board.getNumHalfCircles();
+    int numberOfCells;
 
     public PlayController(Player player, Board board) {
         this.player = player;
         this.board = board;
+        this.numberOfCells = board.getNumSquares() +board.getNumHalfCircles();
+    }
+
+    @FXML
+    void btnAccessHelpClicked(ActionEvent event) {
+        try {
+            final String HELP_SCREEN_FILE_PATH = "/view/HelpScreen.fxml";
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(HELP_SCREEN_FILE_PATH));
+            fxmlLoader.setController(new HelpScreenController());
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // set new scene for current stage
+            stage.setScene(new Scene(root));
+            stage.setTitle("Help Screen");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
+    }
+
+    @FXML
+    public void btnBackFromHomeControllerClicked(ActionEvent event) {
+        try {
+            // TODO while playing: just a pop-up
+
+            final String INTRO_SCREEN_FILE_PATH = "/view/Home.fxml";
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(INTRO_SCREEN_FILE_PATH));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            stage.setScene(new Scene(root));
+            stage.setTitle("Intro Screen");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     public void initialize() {
 
+        
+
         //set 2 frame invisible
         turnPlayer1.setVisible(false);
         turnPlayer2.setVisible(false);
+        paneList = Arrays.asList(cell00, cell01, cell02, cell03, cell04,cell05,cell06,cell07,cell08,cell09,cell10,cell11);
 
         //set cell clickable and set cell around is disable
         
