@@ -13,16 +13,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import model.board.Board;
-import model.player.Player;
+import model.player.Players;
 import javafx.scene.Node;
 
 public class HomeController {
     private Board board;
-    private Player player1;
-    private Player player2;
+    private Players player1;
+    private Players player2;
 
 
-	public HomeController (Board board, Player player1, Player player2) {
+	public HomeController (Board board, Players player1, Players player2) {
         this.board = board;
         this.player1 = player1;
         this.player2 = player2;
@@ -90,7 +90,7 @@ public class HomeController {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/Play.fxml"));
 
                 Board board = new Board();
-                Player player = new Player("player1", "player2", board);
+                Players player = new Players("player1", "player2", board);
                 fxmlLoader.setController(new PlayController(player, board));
                 Parent root = fxmlLoader.load();
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

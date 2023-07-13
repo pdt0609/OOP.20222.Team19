@@ -10,18 +10,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import model.board.Board;
-import model.player.Player;
-
+import model.player.Players;
 
 import java.io.IOException;
 
 public class HelpScreenController {
     private Board board;
-    private Player player1, player2;
+    private Players player1, player2;
     public HelpScreenController() {
     	
     }
-    public HelpScreenController(Board board, Player player1, Player player2) {
+    public HelpScreenController(Board board, Players player1, Players player2) {
         this.board = board;
         this.player1 = player1;
         this.player2 = player2;

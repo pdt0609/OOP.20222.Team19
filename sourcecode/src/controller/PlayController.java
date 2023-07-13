@@ -18,7 +18,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.board.Board;
-import model.player.Player;
+import model.player.Players;
 
 public class PlayController{
 
@@ -92,17 +92,31 @@ public class PlayController{
     @FXML
     private Text winnerScore;
 
+    @FXML
+    private String player1Name;
+
+    @FXML
+    private String player2Name;
+
+    @FXML
+    private Text name1Display;
+
+    @FXML
+    private Text name2Display;
+
 
 
     private List<Pane> paneList; // not exist -> need to declare
-    private Player player;
+    private Players players;
     private Board board;
     int numberOfCells;
 
-    public PlayController(Player player, Board board) {
-        this.player = player;
+    public PlayController(Players players, Board board) {
+        this.players = players;
         this.board = board;
         this.numberOfCells = board.getNumSquares() +board.getNumHalfCircles();
+        this.player1Name = players.getPlayer1();
+        this.player2Name = players.getPlayer2();
     }
 
     @FXML
@@ -174,12 +188,10 @@ public class PlayController{
             endGameScreen.setVisible(false);
             //reset board
             board = new Board();
-            player = new Player("player1", "player2", board);
+            players = new Players(player1Name,player2Name, board);
             initialize();
-            //reset score
-            // player.resetScore();
+            //display
             this.setDisplay();
-
         });
 
         //set home button
@@ -217,22 +229,20 @@ public class PlayController{
 
                     if (board.getCells()[index].getGemList().size() == 0){
                         pane.setDisable(false);
-                        if (player.getTurn() == 1){
-                            if (board.checkNoGemsOnSide("player1")){
-                            player.reduceScore("player1");
+                        System.out.println("Cell could not be clicked");
+                        if (players.getTurn() == 1){
+                            if (board.checkNoGemsOnSide(player1Name)){
+                            players.reduceScore(player1Name);
                             this.setDisplay();
                             }
 
                         }
-                        else if (player.getTurn() == 2){
-                            if (board.checkNoGemsOnSide("player2")){
-                            player.reduceScore("player2");
+                        else if (players.getTurn() == 2){
+                            if (board.checkNoGemsOnSide(player2Name)){
+                            players.reduceScore(player2Name);
                             this.setDisplay();
                             }
                         }
-                        System.out.println("Cell could not be clicked");
-                        
-            
                     }
                     else{
                         System.out.println("Cell clicked");
@@ -266,17 +276,17 @@ public class PlayController{
 
                             // Set the direction
                             if (imageView.getId().startsWith("btnCCL")) {
-                                player.setDirection(0);
+                                players.setDirection(0);
                             } else if (imageView.getId().startsWith("btnCL")) {
-                                player.setDirection(1);
+                                players.setDirection(1);
                             }
 
                             //spread gems
-                            if (player.getTurn() == 1){
-                                player.spreadGems("player1",board.getCells()[index], player.getDirection());
+                            if (players.getTurn() == 1){
+                                players.spreadGems(player1Name,board.getCells()[index], players.getDirection());
                             }
-                            else if(player.getTurn() == 2){
-                                player.spreadGems("player2",board.getCells()[index], player.getDirection());
+                            else if(players.getTurn() == 2){
+                                players.spreadGems(player2Name,board.getCells()[index], players.getDirection());
                             }
 
                             //fake end game
@@ -286,18 +296,18 @@ public class PlayController{
                             //check end game
                             if (board.endGame()){
                                 System.out.println("end game");
-                                player.assembleSmallGems();
-                                if (player.getScore("player1") > player.getScore("player2")){
+                                players.assembleSmallGems();
+                                if (players.getScore(player1Name) > players.getScore(player2Name)){
                                     winnerName.setText("1");
-                                    winnerScore.setText(Integer.toString(player.getScore("player1")));
+                                    winnerScore.setText(Integer.toString(players.getScore(player1Name)));
                                 }
-                                else if (player.getScore("player1") < player.getScore("player2")){
+                                else if (players.getScore(player1Name) < players.getScore(player2Name)){
                                     winnerName.setText("2");
-                                    winnerScore.setText(Integer.toString(player.getScore("player2")));
+                                    winnerScore.setText(Integer.toString(players.getScore(player2Name)));
                                 }
                                 else{
                                     winnerName.setText("Draw");
-                                    winnerScore.setText(Integer.toString(player.getScore("player1")));
+                                    winnerScore.setText(Integer.toString(players.getScore(player1Name)));
                                 }
 
                                 endGameScreen.setVisible(true);
@@ -308,7 +318,7 @@ public class PlayController{
                             this.setDisplay();
 
                             switchTurn(pane); // still have error when click to direction it not change turn, 3 time after and also not invisible
-                            System.out.println(Integer.toString(player.getTurn()));
+                            System.out.println(Integer.toString(players.getTurn()));
                             event1.consume();
                         });
 
@@ -321,8 +331,8 @@ public class PlayController{
         // Initialize play
         Random rand = new Random();
         int randTurn = rand.nextInt(2) + 1;
-        player.setTurn(randTurn);
-        if (player.getTurn() == 1){
+        players.setTurn(randTurn);
+        if (players.getTurn() == 1){
             turnPlayer1.setVisible(true);
             turnPlayer2.setVisible(false);
             //set able for cells 1
@@ -367,7 +377,7 @@ public class PlayController{
             }
         }
 
-        if (player.getTurn() == 1){
+        if (players.getTurn() == 1){
 
             // display turn
             turnPlayer1.setVisible(false);
@@ -383,7 +393,7 @@ public class PlayController{
                 }
             }
             //set new turn
-            player.setTurn(2);
+            players.setTurn(2);
         
         }else{
 
@@ -401,7 +411,7 @@ public class PlayController{
                 }
             }
             //set new turn
-            player.setTurn(1);
+            players.setTurn(1);
             }
         }
     
@@ -426,8 +436,8 @@ public class PlayController{
             numberOfGems.setText(Integer.toString(board.getCells()[i].getGemList().size()));
 
         }
-        scorePlayer2.setText(Integer.toString(player.getScore("player2")));
-        scorePlayer1.setText(Integer.toString(player.getScore("player1")));
+        scorePlayer2.setText(Integer.toString(players.getScore("player2")));
+        scorePlayer1.setText(Integer.toString(players.getScore("player1")));
     }
 
 }
