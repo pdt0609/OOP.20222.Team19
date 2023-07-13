@@ -142,6 +142,7 @@ public class PlayController{
     private List<Pane> paneList = Arrays.asList(cell00, cell01, cell02, cell03, cell04,cell05,cell06,cell07,cell08,cell09,cell10,cell11); // not exist -> need to declare
     private Player player;
     private Board board;
+    int numberOfCells = board.getNumSquares() +board.getNumHalfCircles();
 
     public PlayController(Player player, Board board) {
         this.player = player;
@@ -156,7 +157,7 @@ public class PlayController{
         turnPlayer2.setVisible(false);
 
         //set cell clickable and set cell around is disable
-        int numberOfCells = board.getNumSquares() +board.getNumHalfCircles();
+        
         for (int i=0; i < numberOfCells; i++) {
             int index = i;
             if ((i != 0) && (i != 6)){
@@ -200,7 +201,7 @@ public class PlayController{
                             if (player.getTurn() == 1){
                                 player.spreadGems("player1",board.getCells()[index+1], player.getDirection());
                             }
-                            else if( player.getTurn() == 2){
+                            else if(player.getTurn() == 2){
                                 player.spreadGems("player2",board.getCells()[index+7], player.getDirection());
                             }
 
@@ -218,7 +219,7 @@ public class PlayController{
             }
         }
 
-        // run
+        // Initialize play
         Random rand = new Random();
         int randTurn = rand.nextInt(2) + 1;
         player.setTurn(randTurn);
@@ -226,37 +227,35 @@ public class PlayController{
             turnPlayer1.setVisible(true);
             turnPlayer2.setVisible(false);
             //set able for cells 1
-            for (int i=0; i < board.getNumSquares()/2; i++) {
-                Pane pane = listPaneOnPlayer1.get(i);
-                pane.setDisable(false);
+            for (int i=0; i < numberOfCells; i++) {
+                if ((i != 0) && (i != 6)){
+                    Pane pane = paneList.get(i);
+                    if (i < 6)
+                        pane.setDisable(false);
+                    else
+                        pane.setDisable(true);
+                }
             }
 
-            //set disable for cells 2
-            for (int i=0; i < board.getNumSquares()/2; i++) {
-                Pane pane = listPaneOnPlayer2.get(i);
-                pane.setDisable(true);
-            }
-        }
-        else{
+        }else{
             turnPlayer1.setVisible(false);
             turnPlayer2.setVisible(true);
             //set disable for cells 1
-            for (int i=0; i < board.getNumSquares()/2; i++) {
-                Pane pane = listPaneOnPlayer1.get(i);
-                pane.setDisable(true);
+            for (int i=0; i < numberOfCells; i++) {
+                if ((i != 0) && (i != 6)){
+                    Pane pane = paneList.get(i);
+                    if (i < 6)
+                        pane.setDisable(true);
+                    else
+                        pane.setDisable(false);
+                }
             }
-
-            //set able for cells 2
-            for (int i=0; i < board.getNumSquares()/2; i++) {
-                Pane pane = listPaneOnPlayer2.get(i);
-                pane.setDisable(false);
-            }
+            
         }
 
     }
 
     public void switchTurn(Pane paneChosen){
-
         List<Node> children = paneChosen.getChildren();
 
         // Set both direction buttons in the pane to invisible
@@ -271,19 +270,17 @@ public class PlayController{
             // display turn
             turnPlayer1.setVisible(false);
             turnPlayer2.setVisible(true);
-            
-            //set able for cells 1
-            for (int i=0; i < board.getNumSquares()/2; i++) {
-                Pane pane = listPaneOnPlayer1.get(i);
-                pane.setDisable(true);
-            }
 
-            //set disable for cells 2
-            for (int i=0; i < board.getNumSquares()/2; i++) {
-                Pane pane = listPaneOnPlayer2.get(i);
-                pane.setDisable(false);
+            for (int i=0; i < numberOfCells; i++) {
+                if ((i != 0) && (i != 6)){
+                    Pane pane = paneList.get(i);
+                    if (i < 6)
+                        pane.setDisable(true);
+                    else
+                        pane.setDisable(false);
+                }
             }
-
+            //set new turn
             player.setTurn(2);
         
         }else{
@@ -292,17 +289,16 @@ public class PlayController{
             turnPlayer1.setVisible(true);
             turnPlayer2.setVisible(false);
             
-            //set disable for cells 1
-            for (int i=0; i < board.getNumSquares()/2; i++) {
-                Pane pane = listPaneOnPlayer1.get(i);
-                pane.setDisable(false);
+            for (int i=0; i < numberOfCells; i++) {
+                if ((i != 0) && (i != 6)){
+                    Pane pane = paneList.get(i);
+                    if (i < 6)
+                        pane.setDisable(false);
+                    else
+                        pane.setDisable(true);
+                }
             }
-
-            //set able for cells 2
-            for (int i=0; i < board.getNumSquares()/2; i++) {
-                Pane pane = listPaneOnPlayer2.get(i);
-                pane.setDisable(true);
-            }
+            //set new turn
             player.setTurn(1);
             }
         }
@@ -331,9 +327,6 @@ public class PlayController{
         scorePlayer2.setText(Integer.toString(player.getScore("player2")));
         scorePlayer1.setText(Integer.toString(player.getScore("player1")));
     }
-    
-
-
 
 }
 
