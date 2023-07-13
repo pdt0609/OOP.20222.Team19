@@ -1,19 +1,16 @@
 package model.board;
 
 import java.util.ArrayList;
-
+import model.gem.*;
 
 public abstract class Cell {
     private int location;
     private int numberOfGems;
+    private ArrayList<Gem> gemList = new ArrayList<Gem>();
 
     public Cell(int location, int numberOfGems) {
         this.location = location;
         this.numberOfGems = numberOfGems;
-    }
-
-    public Cell(int location) {
-        this.location = location;
     }
 
     public int getLocation() {
@@ -24,7 +21,11 @@ public abstract class Cell {
         return numberOfGems;
     }
 
-    public void addGem(Gem gem) {
+    public ArrayList<Gem> getGemList() {
+        return gemList;
+    }
+
+    public void addGem(Gem gem) {  // polymorphism for add or declare
         this.gemList.add(gem);
     }
 
