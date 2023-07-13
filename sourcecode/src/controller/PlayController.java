@@ -107,6 +107,9 @@ public class PlayController{
 
     @FXML
     void btnAccessHelpClicked(ActionEvent event) {
+
+            Stage currentStage = (Stage) btnHome.getScene().getWindow();
+            currentStage.close();
         try {
             final String HELP_SCREEN_FILE_PATH = "/view/HelpScreen.fxml";
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(HELP_SCREEN_FILE_PATH));
@@ -128,6 +131,8 @@ public class PlayController{
 
     @FXML
     public void btnBackFromHomeControllerClicked(ActionEvent event) {
+        Stage currentStage = (Stage) btnHome.getScene().getWindow();
+        currentStage.close();
         try {
             // TODO while playing: just a pop-up
 
@@ -147,13 +152,60 @@ public class PlayController{
 
     @FXML
     public void initialize() {
-
-        
-
         //set 2 frame invisible
         turnPlayer1.setVisible(false);
         turnPlayer2.setVisible(false);
         paneList = Arrays.asList(cell00, cell01, cell02, cell03, cell04,cell05,cell06,cell07,cell08,cell09,cell10,cell11);
+
+        //hide direction initially
+        for (int i=0; i < numberOfCells; i++){
+            Pane pane = paneList.get(i);
+            List<Node> children = pane.getChildren();
+            for (Node child : children) {
+                if (child instanceof ImageView) {
+                    ImageView imageView = (ImageView) child;
+                    imageView.setVisible(false);
+                }
+            }
+        }
+
+        //set play again button
+        btnPlayAgain.setOnAction(event ->{
+            endGameScreen.setVisible(false);
+            //reset board
+            board = new Board();
+            player = new Player("player1", "player2", board);
+            initialize();
+            //reset score
+            // player.resetScore();
+            this.setDisplay();
+
+        });
+
+        //set home button
+        btnHomeWinner.setOnAction(event ->{
+            endGameScreen.setVisible(false);
+            Stage currentStage = (Stage) btnHomeWinner.getScene().getWindow();
+            currentStage.close();
+            // player.resetScore();
+            
+            try {
+
+            final String INTRO_SCREEN_FILE_PATH = "/view/Home.fxml";
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(INTRO_SCREEN_FILE_PATH));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            stage.setScene(new Scene(root));
+            stage.setTitle("Intro Screen");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            
+            });
+        endGameScreen.setVisible(false);
 
         //set cell clickable and set cell around is disable
         
@@ -162,15 +214,22 @@ public class PlayController{
             if ((i != 0) && (i != 6)){
                 Pane pane = paneList.get(i);
                 pane.setOnMouseClicked(event -> {
-                    System.out.println("Cell clicked");
-                    
-                    //show direction
-                    showDirection(pane);
-                    
-                    for (int j=0; j < numberOfCells ; j++){
-                        if (j != index ){
-                            Pane paneAround = paneList.get(j);
-                            paneAround.setDisable(true);
+
+                    if (board.getCells()[index].getGemList().size() == 0){
+                        pane.setDisable(false);
+                        System.out.println("Cell could not be clicked");
+                    }
+                    else{
+                        System.out.println("Cell clicked");
+                        
+                        //show direction
+                        showDirection(pane);
+                        
+                        for (int j=0; j < numberOfCells ; j++){
+                            if (j != index ){
+                                Pane paneAround = paneList.get(j);
+                                paneAround.setDisable(true);
+                            }
                         }
                     }
                 });
@@ -186,6 +245,7 @@ public class PlayController{
                 for (Node child : children) {
                     if (child instanceof ImageView) {
                         ImageView imageView = (ImageView) child;
+
                         imageView.setOnMouseClicked(event1 -> {
                             System.out.println("Direction clicked");
 
@@ -198,10 +258,35 @@ public class PlayController{
 
                             //spread gems
                             if (player.getTurn() == 1){
-                                player.spreadGems("player1",board.getCells()[index+1], player.getDirection());
+                                player.spreadGems("player1",board.getCells()[index], player.getDirection());
                             }
                             else if(player.getTurn() == 2){
-                                player.spreadGems("player2",board.getCells()[index+7], player.getDirection());
+                                player.spreadGems("player2",board.getCells()[index], player.getDirection());
+                            }
+
+                            //fake end game
+                            board.getCells()[0].setEmpty();
+                            board.getCells()[6].setEmpty();
+
+                            //check end game
+                            if (board.endGame()){
+                                System.out.println("end game");
+                                player.assembleSmallGems();
+                                if (player.getScore("player1") > player.getScore("player2")){
+                                    winnerName.setText("1");
+                                    winnerScore.setText(Integer.toString(player.getScore("player1")));
+                                }
+                                else if (player.getScore("player1") < player.getScore("player2")){
+                                    winnerName.setText("2");
+                                    winnerScore.setText(Integer.toString(player.getScore("player2")));
+                                }
+                                else{
+                                    winnerName.setText("Draw");
+                                    winnerScore.setText(Integer.toString(player.getScore("player1")));
+                                }
+
+                                endGameScreen.setVisible(true);
+
                             }
 
                             //display number of gems
