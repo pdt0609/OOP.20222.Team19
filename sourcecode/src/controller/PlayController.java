@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -20,6 +21,53 @@ import model.board.Cell;
 import model.player.Player;
 
 public class PlayController{
+	@FXML
+    private Button btnAccessHelp;	
+    @FXML
+    void btnAccessHelpClicked(ActionEvent event) {
+        try {
+            final String HELP_SCREEN_FILE_PATH = "/view/HelpScreen.fxml";
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(HELP_SCREEN_FILE_PATH));
+            fxmlLoader.setController(new HelpScreenController());
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // set new scene for current stage
+            stage.setScene(new Scene(root));
+            stage.setTitle("Help Screen");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
+    }
+	
+	@FXML
+    private Button btnExit;
+
+    @FXML
+    public void btnBackFromHomeControllerClicked(ActionEvent event) {
+        try {
+            // TODO while playing: just a pop-up
+
+            final String INTRO_SCREEN_FILE_PATH = "/view/Home.fxml";
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(INTRO_SCREEN_FILE_PATH));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            stage.setScene(new Scene(root));
+            stage.setTitle("Intro Screen");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+	
+	
+    
     @FXML
     private ImageView btnCCLCell01;
 
@@ -164,16 +212,6 @@ public class PlayController{
     @FXML
     private ImageView turnPlayer2;
 
-    @FXML
-    private Button btnHomeWinner;
-
-    @FXML
-    private Button btnPlayAgain;
-
-
-    @FXML
-    private ImageView endGameScreen;
-
     private List<Pane> listPaneOnPlayer1 = new ArrayList<Pane>(); // not exist -> need to declare
     private List<Pane> listPaneOnPlayer2 = new ArrayList<Pane>();
     private Player player;
@@ -225,58 +263,25 @@ public class PlayController{
         listPaneOnPlayer2.add(cell10);
         listPaneOnPlayer2.add(cell11);
 
-        //set end game screen invisible
-        btnPlayAgain.setOnAction(event5 ->{
-            endGameScreen.setVisible(false);
-            board = new Board();
-            player = new Player("player1", "player2", board);
-            initialize();
-        });
-
-        btnHomeWinner.setOnAction(event6 ->{
-            // new HomeController();
-            // Stage currentStage = (Stage) cell01.getScene().getWindow();
-            // currentStage.close();
-            endGameScreen.setVisible(false);
-
-        });
-        
-        endGameScreen.setVisible(false);
-
         //get cells on player 1
         Cell[] cellsOnPlayer1 = board.getPlayer1Cells(); // may be remove
         for (int i=0; i < cellsOnPlayer1.length; i++) {
             int index = i;
             Pane pane = listPaneOnPlayer1.get(i);
             pane.setOnMouseClicked(event -> {
+                //show direction
+                System.out.println("before clicking direction"+Integer.toString(board.getBoard()[index+1].getGemList().size()));
 
-                if (cellsOnPlayer1[index].getGemList().size() == 0){
-                    pane.setDisable(false);
-                    System.out.println("Cell could not be clicked");
-                    
-                }
-                else{
-                    // show direction
-                    showDirection(pane);
-                    System.out.println("Cell clicked");
-                
-                    for (int j=0; j < cellsOnPlayer1.length; j++){
+                showDirection(pane);
+                System.out.println("Cell clicked");
+                for (int j=0; j < cellsOnPlayer1.length; j++){
+                    if (j != index ){
                         Pane paneAround = listPaneOnPlayer1.get(j);
-                        if (j != index ){
-                            paneAround.setDisable(true);
-                        }
-                        
+                        paneAround.setDisable(true);
                     }
-
                 }
-
                 
-
-            
-
             });
-
-            
         }
 
         //set direction then spread gems of player 1
@@ -300,23 +305,7 @@ public class PlayController{
                         //spread gems
                         player.spreadGems("player1",board.getBoard()[index+1], player.getDirection());
 
-                        //fake end game
-                        board.getBoard()[0].setEmpty();
-                        board.getBoard()[6].setEmpty();
-
-                        //check end game
-                        if (board.endGame()){
-                            System.out.println("end game");
-                            player.assembleSmallGems();
-                            scorePlayer2.setText(Integer.toString(player.getScore("player2")));
-                            endGameScreen.setVisible(true);
-                            scorePlayer1.setText(Integer.toString(player.getScore("player1")));
-
-                            
-
-                          
-                        }
-                        //display number of gems on board 
+                        //display number of gems
                         numGemsCell00.setText(Integer.toString(board.getBoard()[0].getGemList().size()));
                         numGemsCell01.setText(Integer.toString(board.getBoard()[1].getGemList().size()));
                         numGemsCell02.setText(Integer.toString(board.getBoard()[2].getGemList().size()));
@@ -330,17 +319,11 @@ public class PlayController{
                         numGemsCell10.setText(Integer.toString(board.getBoard()[10].getGemList().size()));
                         numGemsCell11.setText(Integer.toString(board.getBoard()[11].getGemList().size()));
 
-                        
-                        
-                        //display score
+                        //set score
                         scorePlayer1.setText(Integer.toString(player.getScore("player1")));
                         System.out.println("after clicking direction"+Integer.toString(board.getBoard()[index+1].getGemList().size()));
-                        
-                        // switch turn
                         switchTurn(pane); // still have error when click to direction it not change turn, 3 time after and also not invisible
                         System.out.println(Integer.toString(player.getTurn()));
-
-                        //consume event avoid to click to parent
                         event1.consume();
                     });
 
@@ -355,28 +338,17 @@ public class PlayController{
             int index = i;
             Pane pane = listPaneOnPlayer2.get(i);
             pane.setOnMouseClicked(event2 -> {
-
-              if (cellsOnPlayer2[index].getGemList().size() == 0){
-                    pane.setDisable(false);
-                    System.out.println("Cell could not be clicked");
-                    
-                }
-                else{
-                    // show direction
-                    showDirection(pane);
-                    System.out.println("Cell clicked");
-                
-                    for (int j=0; j < cellsOnPlayer2.length; j++){
+                System.out.println("before clicking direction"+Integer.toString(board.getBoard()[index+7].getGemList().size()));
+                //show direction
+                showDirection(pane);
+                System.out.println("Cell clicked");
+                for (int j=0; j < cellsOnPlayer2.length; j++){
+                    if (j != index ){
                         Pane paneAround = listPaneOnPlayer2.get(j);
-                        if (j != index ){
-                            paneAround.setDisable(true);
-                        }
-                        
+                        paneAround.setDisable(true);
                     }
-
                 }
             });
-            
         }
 
         //set direction then spread gems of player 2
@@ -399,23 +371,6 @@ public class PlayController{
 
                         //spread gems
                         player.spreadGems("player2",board.getBoard()[index+7], player.getDirection());
-
-                        //fake end game
-                        board.getBoard()[0].setEmpty();
-                        board.getBoard()[6].setEmpty();
-
-                        //check end game
-                        if (board.endGame()){
-                            System.out.println("end game");
-                            player.assembleSmallGems();
-                            scorePlayer2.setText(Integer.toString(player.getScore("player2")));
-                            scorePlayer1.setText(Integer.toString(player.getScore("player1")));
-                            endGameScreen.setVisible(true);
-
-    
-                          
-                        }
-
                         //display number of gems
                         numGemsCell00.setText(Integer.toString(board.getBoard()[0].getGemList().size()));
                         numGemsCell01.setText(Integer.toString(board.getBoard()[1].getGemList().size()));
@@ -430,13 +385,9 @@ public class PlayController{
                         numGemsCell10.setText(Integer.toString(board.getBoard()[10].getGemList().size()));
                         numGemsCell11.setText(Integer.toString(board.getBoard()[11].getGemList().size()));
 
-                        
-
                         //set score
                         scorePlayer2.setText(Integer.toString(player.getScore("player2")));
-                        System.out.println("after clicking direction" + Integer.toString(board.getBoard()[index+7].getGemList().size()));
-
-                        
+                        System.out.println("after clicking direction"+Integer.toString(board.getBoard()[index+7].getGemList().size()));
 
                         // switch turn
                         switchTurn(pane);
@@ -549,6 +500,9 @@ public class PlayController{
             }
         }
     }
+    
+
+
 
 }
 
