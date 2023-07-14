@@ -99,9 +99,6 @@ public class PlayController{
     private Text winnerName;
 
     @FXML
-    private Text winnerScore;
-
-    @FXML
     private String player1Name;
 
     @FXML
@@ -112,6 +109,34 @@ public class PlayController{
 
     @FXML
     private Text name2Display;
+
+    @FXML
+    private Text winnerScore1;
+
+    @FXML
+    private Text winnerScore2;
+
+    @FXML
+    private Text player1winner;
+
+    @FXML
+    private Text player2Winner;
+
+    @FXML
+    private AnchorPane helpScreen;
+
+    @FXML
+    private Button btnContinue;
+
+    @FXML
+    private Text name1;
+
+    @FXML
+    private Text name2;
+
+
+
+
 
     private Timeline timeline = new Timeline() ;
     private List<Pane> paneList; // not exist -> need to declare
@@ -127,53 +152,50 @@ public class PlayController{
         this.player2Name = players.getPlayer2();
     }
 
-    @FXML
-    void btnAccessHelpClicked(ActionEvent event) {
 
-            Stage currentStage = (Stage) btnHome.getScene().getWindow();
-            currentStage.close();
-        try {
-            final String HELP_SCREEN_FILE_PATH = "/view/HelpScreen.fxml";
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(HELP_SCREEN_FILE_PATH));
-            fxmlLoader.setController(new HelpScreenController());
-            Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-            // set new scene for current stage
-            stage.setScene(new Scene(root));
-            stage.setTitle("Help Screen");
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
-
-    }
-
-    @FXML
-    public void btnBackFromHomeControllerClicked(ActionEvent event) {
-        Stage currentStage = (Stage) btnHome.getScene().getWindow();
-        currentStage.close();
-        try {
-            // TODO while playing: just a pop-up
-
-            final String INTRO_SCREEN_FILE_PATH = "/view/Home.fxml";
-
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(INTRO_SCREEN_FILE_PATH));
-            Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            stage.setScene(new Scene(root));
-            stage.setTitle("Intro Screen");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    // @FXML
+    // public void btnBackFromHomeControllerClicked(ActionEvent event) {
+        
+    // }
 
     @FXML
     public void initialize() {
+
+        helpScreen.setVisible(false);
+        
+        name1.setText(player1Name);
+        name2.setText(player2Name);
+
+        btnHelp.setOnAction(event -> {
+            helpScreen.setVisible(true);
+        });
+
+        btnContinue.setOnAction(event -> {
+            helpScreen.setVisible(false);
+        });
+
+        btnHome.setOnAction(event -> {
+
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/Home.fxml"));
+                Parent root = fxmlLoader.load();
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Home Screen");
+                stage.show();
+        
+                // Close the current stage (optional)
+                Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                currentStage.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        
+        
+
+
         //set 2 frame invisible
         turnPlayer1.setVisible(false);
         turnPlayer2.setVisible(false);
@@ -205,26 +227,20 @@ public class PlayController{
 
         //set home button
         btnHomeWinner.setOnAction(event ->{
-            endGameScreen.setVisible(false);
-            Stage currentStage = (Stage) btnHomeWinner.getScene().getWindow();
-            currentStage.close();
-            // player.resetScore();
-            
             try {
-
-            final String INTRO_SCREEN_FILE_PATH = "/view/Home.fxml";
-
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(INTRO_SCREEN_FILE_PATH));
-            Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            stage.setScene(new Scene(root));
-            stage.setTitle("Intro Screen");
-
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/Home.fxml"));
+                Parent root = fxmlLoader.load();
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Home Screen");
+                stage.show();
+        
+                // Close the current stage (optional)
+                Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                currentStage.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            
             });
         endGameScreen.setVisible(false);
 
@@ -302,43 +318,41 @@ public class PlayController{
                             }
 
                             //fake end game
-                            // board.getCells()[0].setEmpty();
-                            // board.getCells()[6].setEmpty();
+                            board.getCells()[0].setEmpty();
+                            board.getCells()[6].setEmpty();
 
-                            //check end game
+
+                            
+                            
+
+                            //check end game (inside)
                             if (board.endGame()){
                                 System.out.println("end game");
-                                players.assembleSmallGems();
+                                players.assembleSmallGems(players.getItinerary());
                                 if (players.getScore(player1Name) > players.getScore(player2Name)){
                                     winnerName.setText("1");
-                                    winnerScore.setText(Integer.toString(players.getScore(player1Name)));
                                 }
                                 else if (players.getScore(player1Name) < players.getScore(player2Name)){
                                     winnerName.setText("2");
-                                    winnerScore.setText(Integer.toString(players.getScore(player2Name)));
                                 }
                                 else{
                                     winnerName.setText("Draw");
-                                    winnerScore.setText(Integer.toString(players.getScore(player1Name)));
                                 }
+                                winnerScore1.setText(Integer.toString(players.getScore(player1Name)));
+                                winnerScore2.setText(Integer.toString(players.getScore(player2Name)));
 
                                 endGameScreen.setVisible(true);
 
                             }
+
                             for (Cell cell : players.getItinerary()){
                                 System.out.println("location" + cell.getLocation() + "size" + cell.getGemList().size());
                             }
-
                             //display number of gems
-                            // System.out.println("size of itinerary"+players.getItinerary().size());
                             this.setMotionDisplay(players.getItinerary(),pane);
+
                             players.setItinerary(new ArrayList<Cell>());
-                            // players.setItinerary(new ArrayList<Cell>());
-                            // this.setDisplay(board);
-                            
-                            
-                             // still have error when click to direction it not change turn, 3 time after and also not invisible
-                            // System.out.println(Integer.toString(players.getTurn()));
+ 
                             event1.consume();
                         });
 
@@ -483,32 +497,51 @@ public class PlayController{
             timeline.getKeyFrames().clear();
             for (int i = 0; i < longDisplay; i++){
                 int index = i;
+                
                 timeline.getKeyFrames().addAll(new KeyFrame(Duration.seconds(i*0.5), event -> {
+                
                 Cell cell = itinerary.get(index);
                 System.out.println("Run location" + cell.getLocation() + "Run size" + cell.getGemList().size());
                 int id = cell.getLocation();
                 Pane pane = paneList.get(id);
-
-                for (Node child : pane.getChildren()) {
-                    if (child instanceof Text) {
-                        Text text = (Text) child; //downcasting
-                        if (child.getId().startsWith("numGems")) {
-                            text.setText(Integer.toString(cell.getGemList().size()));
-                        }if (child.getId().startsWith("small")) {
-                            text.setText("*".repeat(cell.getNumberOfSmallGems()));
-                        }
-                        if (child.getId().startsWith("big")) {
-                            text.setText("*".repeat(cell.getNumberOfBigGems()));
+                
+                    for (Node child : pane.getChildren()) {
+                        if (child instanceof Text) {
+                            Text text = (Text) child; //downcasting
+                            if (child.getId().startsWith("numGems")) {
+                                text.setText(Integer.toString(cell.getGemList().size()));
+                            }if (child.getId().startsWith("small")) {
+                                text.setText("*".repeat(cell.getNumberOfSmallGems()));
+                            }
+                            if (child.getId().startsWith("big")) {
+                                text.setText("*".repeat(cell.getNumberOfBigGems()));
+                            }
                         }
                     }
+                if (board.endGame()){
+                    if(index >= longDisplay - 10){
+                        for (Node child : pane.getChildren()) {
+                            if (child instanceof Text) {
+                                Text text = (Text) child; //downcasting
+                                if (child.getId().startsWith("numGems")) {
+                                    text.setText(Integer.toString(cell.getGemList().size()));
+                                }if (child.getId().startsWith("small")) {
+                                    text.setText("*".repeat(cell.getNumberOfSmallGems()));
+                                }
+                                if (child.getId().startsWith("big")) {
+                                    text.setText("*".repeat(cell.getNumberOfBigGems()));
+                                }
+                            }
+                        }
+                        scorePlayer1.setText(Integer.toString(players.getScore(player1Name)));
+                        scorePlayer2.setText(Integer.toString(players.getScore(player2Name)));
+
+
+                    }
+
+
                 }
-                if (index == itinerary.size()-1){
-                    scorePlayer2.setText(Integer.toString(players.getScore(player2Name)));
-                    scorePlayer1.setText(Integer.toString(players.getScore(player1Name)));
-                    switchTurn(paneChosen);
-                    timeline.stop();
-                }
-                
+                    
 
             }));
                 

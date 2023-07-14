@@ -110,18 +110,29 @@ public class Players { //set action of players with board. Do not make for each 
     public List<Cell> getItinerary(){
         return itinerary;
     }
-    public void assembleSmallGems(){
+    public void assembleSmallGems(List<Cell> itinerary){
 
-    for (int i = 0; i < board.getNumSquares()/2; i++){
-        Cell cell1 = board.getPlayer1Cells()[i];
-        int earnedScore1 = earnScore(cell1);
-        cell1.setEmpty();
-        this.computeScore(this.getPlayer1(), earnedScore1);
+    for (int i = 0; i < board.getNumSquares()+board.getNumHalfCircles(); i++){
 
-        Cell cell2 = board.getPlayer2Cells()[i];
-        int earnedScore2 = earnScore(cell2);
-        cell2.setEmpty();
-        this.computeScore(this.getPlayer2(), earnedScore2);
+        if (i !=0 && i!=6){
+            Cell cell = board.getCells()[i];
+            // int earnedScore = earnScore(cell);
+            cell.setEmpty();
+
+            Cell copyCell = cell.copyCell();
+            itinerary.add(copyCell);
+            // if (i<6){
+                
+            //     this.computeScore(this.getPlayer1(), earnedScore);
+
+            // }
+            // else if (i>6){
+                
+            //     this.computeScore(this.getPlayer2(), earnedScore);
+            // }
+            
+
+            }
         }
     }
     
