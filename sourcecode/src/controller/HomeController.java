@@ -138,10 +138,15 @@ public class HomeController {
         btnStart.setOnAction(event -> {
             System.out.println("Start button pressed");
             nameScreen.setVisible(true);
-        });
-
-
-
+            
+        });}
+    public TextField getName1Box() {
+        return name1Box;
 
     }
+
+    public TextField getName2Box() {
+        return name2Box;
+    }
 }
+
