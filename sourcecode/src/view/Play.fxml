@@ -11,9 +11,9 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fitHeight="768.0" fitWidth="1024.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="807.0" fitWidth="1024.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@images/play-01.png" />
+            <Image url="@images/play.png" />
          </image>
       </ImageView>
       <Text fx:id="scorePlayer1" fill="WHITE" layoutX="240.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
@@ -23,13 +23,37 @@
       </Text>
       <Text fx:id="scorePlayer2" fill="WHITE" layoutX="615.0" layoutY="700.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
          <font>
-            <Font size="50.0" />
+            <Font size="50.0" /> 
          </font>
       </Text>
-      <Button fx:id="btnExit" layoutX="887.0" layoutY="15.0" mnemonicParsing="false" onAction="#btnBackFromHomeControllerClicked" opacity="0.0" prefHeight="48.0" prefWidth="114.0" text="Exit" />
-      <Button fx:id="btnAccessHelp" layoutX="892.0" layoutY="90.0" mnemonicParsing="false" onAction="#btnAccessHelpClicked" opacity="0.0" prefHeight="44.0" prefWidth="104.0" text="Help" />
+      <Button fx:id="btnHome" layoutX="887.0" layoutY="15.0" mnemonicParsing="false" onAction="#btnBackFromHomeControllerClicked" opacity="0.0" prefHeight="48.0" prefWidth="114.0" text="Home" />
+      <Button fx:id="btnHelp" layoutX="892.0" layoutY="90.0" mnemonicParsing="false" onAction="#btnAccessHelpClicked" opacity="0.0" prefHeight="44.0" prefWidth="104.0" text="Help" />
+      <Pane fx:id="cell00" layoutX="24.0" layoutY="265.0" prefHeight="261.0" prefWidth="122.0">
+         <children>
+            <Text fx:id="smallGem00" fill="WHITE" layoutX="35.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="**************" wrappingWidth="90.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
+            <Text fx:id="numGemsCell06" fill="WHITE" layoutX="7.0" layoutY="140.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Text>
+            <Text fx:id="bigGem00" fill="WHITE" layoutX="70.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+               <font>
+                  <Font size="96.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
       <Pane fx:id="cell01" layoutX="149.0" layoutY="267.0" prefHeight="131.0" prefWidth="139.0">
          <children>
+            <Text fx:id="smallGem01" fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
             <Text fx:id="numGemsCell01" fill="WHITE" layoutX="117.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5">
                <font>
                   <Font size="24.0" />
@@ -49,6 +73,11 @@
       </Pane>
       <Pane fx:id="cell02" layoutX="292.0" layoutY="267.0" prefHeight="131.0" prefWidth="139.0">
          <children>
+            <Text fx:id="smallGem02" fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
             <Text fx:id="numGemsCell02" fill="WHITE" layoutX="118.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5">
                <font>
                   <Font size="24.0" />
@@ -66,8 +95,13 @@
             </ImageView>
          </children>
       </Pane>
-      <Pane fx:id="cell03" layoutX="438.0" layoutY="263.0" prefHeight="131.0" prefWidth="139.0">
+      <Pane fx:id="cell03" layoutX="438.0" layoutY="266.0" prefHeight="131.0" prefWidth="139.0">
          <children>
+            <Text fx:id="smallGem03" fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
             <Text fx:id="numGemsCell03" fill="WHITE" layoutX="120.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5">
                <font>
                   <Font size="24.0" />
@@ -87,6 +121,11 @@
       </Pane>
       <Pane fx:id="cell04" layoutX="585.0" layoutY="266.0" prefHeight="131.0" prefWidth="139.0">
          <children>
+            <Text fx:id="smallGem04" fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
             <Text fx:id="numGemsCell04" fill="WHITE" layoutX="120.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5">
                <font>
                   <Font size="24.0" />
@@ -106,6 +145,11 @@
       </Pane>
       <Pane fx:id="cell05" layoutX="730.0" layoutY="267.0" prefHeight="131.0" prefWidth="139.0">
          <children>
+            <Text fx:id="smallGem05" fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
             <Text fx:id="numGemsCell05" fill="WHITE" layoutX="120.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5">
                <font>
                   <Font size="24.0" />
@@ -123,13 +167,32 @@
             </ImageView>
          </children>
       </Pane>
-      <Text fx:id="numGemsCell06" fill="WHITE" layoutX="977.0" layoutY="405.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Text>
-      <Pane fx:id="cell07" layoutX="739.0" layoutY="410.0" prefHeight="131.0" prefWidth="139.0">
+      <Pane fx:id="cell06" layoutX="870.0" layoutY="267.0" prefHeight="261.0" prefWidth="130.0">
          <children>
+            <Text fx:id="smallGem06" fill="WHITE" layoutX="7.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="**************" wrappingWidth="90.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
+            <Text fx:id="numGemsCell00" fill="WHITE" layoutX="100.0" layoutY="140.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Text>
+            <Text fx:id="bigGem06" fill="WHITE" layoutX="20.0" layoutY="270.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*">
+               <font>
+                  <Font size="96.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Pane fx:id="cell07" layoutX="730.0" layoutY="398.0" prefHeight="131.0" prefWidth="139.0">
+         <children>
+            <Text fx:id="smallGem07" fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
             <Text fx:id="numGemsCell07" fill="WHITE" layoutX="120.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5">
                <font>
                   <Font size="24.0" />
@@ -149,6 +212,11 @@
       </Pane>
       <Pane fx:id="cell08" layoutX="585.0" layoutY="397.0" prefHeight="131.0" prefWidth="139.0">
          <children>
+            <Text fx:id="smallGem08" fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
             <Text fx:id="numGemsCell08" fill="WHITE" layoutX="120.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5">
                <font>
                   <Font size="24.0" />
@@ -168,6 +236,11 @@
       </Pane>
       <Pane fx:id="cell09" layoutX="438.0" layoutY="397.0" prefHeight="131.0" prefWidth="139.0">
          <children>
+            <Text fx:id="smallGem09" fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
             <Text fx:id="numGemsCell09" fill="WHITE" layoutX="120.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5">
                <font>
                   <Font size="24.0" />
@@ -187,6 +260,11 @@
       </Pane>
       <Pane fx:id="cell10" layoutX="292.0" layoutY="397.0" prefHeight="131.0" prefWidth="139.0">
          <children>
+            <Text fx:id="smallGem10" fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
             <Text fx:id="numGemsCell10" fill="WHITE" layoutX="120.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5">
                <font>
                   <Font size="24.0" />
@@ -206,6 +284,11 @@
       </Pane>
       <Pane fx:id="cell11" layoutX="149.0" layoutY="397.0" prefHeight="131.0" prefWidth="139.0">
          <children>
+            <Text fx:id="smallGem11" fill="WHITE" layoutX="1.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*****************" wrappingWidth="120.0">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
             <Text fx:id="numGemsCell11" fill="WHITE" layoutX="120.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5">
                <font>
                   <Font size="24.0" />
@@ -223,11 +306,6 @@
             </ImageView>
          </children>
       </Pane>
-      <Text fx:id="numGemsCell00" fill="WHITE" layoutX="33.0" layoutY="404.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Text>
       <Label layoutX="815.0" layoutY="699.0" text="Player 2" textFill="WHITE">
          <font>
             <Font size="20.0" />
@@ -237,16 +315,37 @@
          <font>
             <Font size="20.0" />
          </font>
-       </Label>
+      </Label>
       <ImageView fx:id="turnPlayer2" fitHeight="192.0" fitWidth="449.0" layoutX="528.0" layoutY="587.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@images/frame-02.png" />
+            <Image url="@images/frame-01.png" />
          </image>
       </ImageView>
       <ImageView fx:id="turnPlayer1" fitHeight="192.0" fitWidth="433.0" layoutX="-11.0" layoutY="-9.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@images/frame-03.png" />
+            <Image url="@images/frame-02.png" />
          </image>
       </ImageView>
+      <AnchorPane fx:id="endGameScreen" layoutX="162.0" layoutY="184.0" opacity="100.0" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <ImageView fitHeight="400.0" fitWidth="700.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/winner.png" />
+               </image>
+            </ImageView>
+            <Text fx:id="winnerScore" fill="WHITE" layoutX="175.0drd" layoutY="168.0" strokeType="OUTSIDE" strokeWidth="0.0" text="100" textAlignment="CENTER">
+               <font>
+                  <Font size="58.0" />
+               </font>
+            </Text>
+            <Button fx:id="btnHomeWinner" layoutX="128.0" layoutY="288.0" mnemonicParsing="false" opacity="0.0" prefHeight="52.0" prefWidth="179.0" text="Home" />
+            <Button fx:id="btnPlayAgain" layoutX="128.0" layoutY="205.0" mnemonicParsing="false" opacity="0.0" prefHeight="52.0" prefWidth="179.0" text="Play Again" />
+            <Text fx:id="winnerName" fill="WHITE" layoutX="270.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1" textAlignment="CENTER">
+               <font>
+                  <Font size="58.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>
