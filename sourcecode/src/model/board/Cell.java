@@ -1,12 +1,15 @@
 package model.board;
 
+
 import java.util.ArrayList;
+import java.util.List;
+
 import model.gem.*;
 
-public abstract class Cell {
+public abstract class Cell implements Cloneable{
     private int location;
     private int numberOfGems;
-    private ArrayList<Gem> gemList = new ArrayList<Gem>();
+    private List<Gem> gemList = new ArrayList<Gem>();
 
     public Cell(int location, int numberOfGems) {
         this.location = location;
@@ -21,7 +24,7 @@ public abstract class Cell {
         return numberOfGems;
     }
 
-    public ArrayList<Gem> getGemList() {
+    public List<Gem> getGemList() {
         return gemList;
     }
 
@@ -36,5 +39,55 @@ public abstract class Cell {
     public void setEmpty(){
         this.gemList.clear();
     }
+
+    public int getNumberOfBigGems(){
+        int numberOfBigGems = 0;
+        for (Gem gem : this.gemList){
+            if (gem instanceof BigGem){
+                numberOfBigGems++;
+            }
+        }
+        return numberOfBigGems;
+    }
+    public int getNumberOfSmallGems(){
+        int numberOfSmallGems = 0;
+        for (Gem gem : this.gemList){
+            if (gem instanceof SmallGem){
+                numberOfSmallGems++;
+            }
+        }
+        return numberOfSmallGems;
+    }
+
+    public Cell copyCell(){
+        // Cell newCell = new Cell(cell.getLocation(), cell.getNumberOfGems()); -> Error because Cell is abstract
+        // Cell newCell; can not do because newCell is not initialized from square, halfcircle, circle
+        Cell newCell=null;
+        
+        if (this instanceof Square){
+            newCell = new Square(this.getLocation(), this.getNumberOfGems());
+              //upcasting
+            for (int i=0; i<this.getNumberOfSmallGems();i++){
+            newCell.addGem(new SmallGem());
+            }
+            return newCell;
+        }
+        else if (this instanceof HalfCircle){
+            newCell = new HalfCircle(this.getLocation(), this.getNumberOfGems());
+            for (int i=0; i<this.getNumberOfSmallGems();i++){
+                newCell.addGem(new SmallGem());
+            }
+            for (int i=0; i<this.getNumberOfBigGems();i++){
+                newCell.addGem(new BigGem());
+            }
+            return newCell;
+
+        }
+        return null;
+    }
+
+   
+
+
 
 }

@@ -1,10 +1,13 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,8 +20,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import model.board.Board;
+import model.board.Cell;
 import model.player.Players;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 public class PlayController{
 
@@ -104,11 +113,10 @@ public class PlayController{
     @FXML
     private Text name2Display;
 
-
-
+    private Timeline timeline = new Timeline() ;
     private List<Pane> paneList; // not exist -> need to declare
     private Players players;
-    private Board board;
+    private static Board board;
     int numberOfCells;
 
     public PlayController(Players players, Board board) {
@@ -182,6 +190,7 @@ public class PlayController{
                 }
             }
         }
+        this.setDisplay(board);
 
         //set play again button
         btnPlayAgain.setOnAction(event ->{
@@ -191,7 +200,7 @@ public class PlayController{
             players = new Players(player1Name,player2Name, board);
             initialize();
             //display
-            this.setDisplay();
+            this.setDisplay(board);
         });
 
         //set home button
@@ -233,14 +242,14 @@ public class PlayController{
                         if (players.getTurn() == 1){
                             if (board.checkNoGemsOnSide(player1Name)){
                             players.reduceScore(player1Name);
-                            this.setDisplay();
+                            this.setDisplay(board);
                             }
 
                         }
                         else if (players.getTurn() == 2){
                             if (board.checkNoGemsOnSide(player2Name)){
                             players.reduceScore(player2Name);
-                            this.setDisplay();
+                            this.setDisplay(board);
                             }
                         }
                     }
@@ -280,13 +289,16 @@ public class PlayController{
                             } else if (imageView.getId().startsWith("btnCL")) {
                                 players.setDirection(1);
                             }
-
+                            
                             //spread gems
                             if (players.getTurn() == 1){
                                 players.spreadGems(player1Name,board.getCells()[index], players.getDirection());
+        
+                                // System.out.println(itin.size());
                             }
-                            else if(players.getTurn() == 2){
+                            if(players.getTurn() == 2){
                                 players.spreadGems(player2Name,board.getCells()[index], players.getDirection());
+                                // System.out.println(itin.size());
                             }
 
                             //fake end game
@@ -313,12 +325,20 @@ public class PlayController{
                                 endGameScreen.setVisible(true);
 
                             }
+                            for (Cell cell : players.getItinerary()){
+                                System.out.println("location" + cell.getLocation() + "size" + cell.getGemList().size());
+                            }
 
                             //display number of gems
-                            this.setDisplay();
-
-                            switchTurn(pane); // still have error when click to direction it not change turn, 3 time after and also not invisible
-                            System.out.println(Integer.toString(players.getTurn()));
+                            // System.out.println("size of itinerary"+players.getItinerary().size());
+                            this.setMotionDisplay(players.getItinerary(),pane);
+                            players.setItinerary(new ArrayList<Cell>());
+                            // players.setItinerary(new ArrayList<Cell>());
+                            // this.setDisplay(board);
+                            
+                            
+                             // still have error when click to direction it not change turn, 3 time after and also not invisible
+                            // System.out.println(Integer.toString(players.getTurn()));
                             event1.consume();
                         });
 
@@ -368,14 +388,7 @@ public class PlayController{
     }
 
     public void switchTurn(Pane paneChosen){
-        List<Node> children = paneChosen.getChildren();
-
-        // Set both direction buttons in the pane to invisible
-        for (Node child : children) {
-            if (child instanceof ImageView) {
-                child.setVisible(false);
-            }
-        }
+        
 
         if (players.getTurn() == 1){
 
@@ -429,29 +442,95 @@ public class PlayController{
         }
     }
 
-    public void setDisplay(){
+    public void setDisplay(Board board){
         for (int i=0; i < board.getCells().length; i++){
             Pane pane = paneList.get(i);
-            
-            if ((i == 0) || (i == 6)){
-                Text numberOfGems = (Text) pane.getChildren().get(0);
-                numberOfGems.setText(Integer.toString(board.getCells()[i].getGemList().size()));
-                Text numberOfSmallGems = (Text) pane.getChildren().get(1);
-                numberOfSmallGems.setText("*".repeat(board.getCells()[i].getSmallGems().size()));
-                Text numberOfBigGems = (Text) pane.getChildren().get(2);
-                numberOfBigGems.setText("O".repeat(board.getCells()[i].getBigGems().size()));
-                
-             
-                
-
-            } // downcast
-            
-
+            for (Node child : pane.getChildren()) {
+                if (child instanceof Text) {
+                    Text text = (Text) child;
+                    if (child.getId().startsWith("numGems")) {
+                        text.setText(Integer.toString(board.getCells()[i].getGemList().size()));
+                    }if (child.getId().startsWith("small")) {
+                        text.setText("*".repeat(board.getCells()[i].getNumberOfSmallGems()));
+                    }
+                    if (child.getId().startsWith("big")) {
+                        text.setText("*".repeat(board.getCells()[i].getNumberOfBigGems()));
+                    }
+                }
+            }
 
         }
         scorePlayer2.setText(Integer.toString(players.getScore(player2Name)));
         scorePlayer1.setText(Integer.toString(players.getScore(player1Name)));
     }
+
+
+
+
+ 
+    public void setMotionDisplay(List<Cell> itinerary, Pane paneChosen) {
+        // int delayMilliseconds = 2000; // Delay between each cell update
+        // int intermediateFrames = 10; // Number of intermediate frames between each cell update
+        // int totalFrames = itinerary.size() * (intermediateFrames + 1); // Total number of frames
+        List<Node> children = paneChosen.getChildren();
+
+        // Set both direction buttons in the pane to invisible
+        for (Node child : children) {
+            if (child instanceof ImageView) {
+                child.setVisible(false);
+            }
+        }
+        int longDisplay = itinerary.size() ;
+        if (!itinerary.isEmpty()) { // Add a check to avoid accessing an empty list
+            // int i = 0;
+            timeline.getKeyFrames().clear();
+            for (int i = 0; i < longDisplay; i++){
+                int index = i;
+                timeline.getKeyFrames().addAll(new KeyFrame(Duration.seconds(i*0.5), event -> {
+                Cell cell = itinerary.get(index);
+                System.out.println("Run location" + cell.getLocation() + "Run size" + cell.getGemList().size());
+                int id = cell.getLocation();
+                Pane pane = paneList.get(id);
+
+                for (Node child : pane.getChildren()) {
+                    if (child instanceof Text) {
+                        Text text = (Text) child; //downcasting
+                        if (child.getId().startsWith("numGems")) {
+                            text.setText(Integer.toString(cell.getGemList().size()));
+                        }if (child.getId().startsWith("small")) {
+                            text.setText("*".repeat(cell.getNumberOfSmallGems()));
+                        }
+                        if (child.getId().startsWith("big")) {
+                            text.setText("*".repeat(cell.getNumberOfBigGems()));
+                        }
+                    }
+                }
+                if (index == itinerary.size()-1){
+                    scorePlayer2.setText(Integer.toString(players.getScore(player2Name)));
+                    scorePlayer1.setText(Integer.toString(players.getScore(player1Name)));
+                    switchTurn(paneChosen);
+                    timeline.stop();
+                }
+                
+
+            }));
+                
+            }
+
+        }
+        
+        // timeline.setCycleCount(itinerary.size());
+        timeline.play();
+
+    }
+        
+        
+    
+    
+
+    
+
+    
 
 }
 
