@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "LambdaExample",
+            "request": "launch",
+            "mainClass": "controller.LambdaExample",
+            "projectName": "OOP.20222.Team26_5d824c21"
+        },
+        {
+            "type": "java",
             "name": "Players",
             "request": "launch",
             "mainClass": "model.player.Players",

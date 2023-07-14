@@ -113,8 +113,7 @@ public class PlayController{
     @FXML
     private Text name2Display;
 
-
-
+    private Timeline timeline = new Timeline() ;
     private List<Pane> paneList; // not exist -> need to declare
     private Players players;
     private static Board board;
@@ -326,6 +325,9 @@ public class PlayController{
                                 endGameScreen.setVisible(true);
 
                             }
+                            for (Cell cell : players.getItinerary()){
+                                System.out.println("location" + cell.getLocation() + "size" + cell.getGemList().size());
+                            }
 
                             //display number of gems
                             // System.out.println("size of itinerary"+players.getItinerary().size());
@@ -449,25 +451,19 @@ public class PlayController{
     public void setDisplay(Board board){
         for (int i=0; i < board.getCells().length; i++){
             Pane pane = paneList.get(i);
-            
-            if ((i == 0) || (i == 6)){
-                Text numberOfGems = (Text) pane.getChildren().get(1);
-                numberOfGems.setText(Integer.toString(board.getCells()[i].getGemList().size()));
-        
-                Text numberOfSmallGems = (Text) pane.getChildren().get(0);
-                numberOfSmallGems.setText("*".repeat(board.getCells()[i].getNumberOfSmallGems()));
-                Text numberOfBigGems = (Text) pane.getChildren().get(2);
-                numberOfBigGems.setText("*".repeat(board.getCells()[i].getNumberOfBigGems()));
-            
-            }else{
-                Text numberOfGems = (Text) pane.getChildren().get(1);
-                numberOfGems.setText(Integer.toString(board.getCells()[i].getGemList().size()));
-                Text numberOfSmallGems = (Text) pane.getChildren().get(0);
-                numberOfSmallGems.setText("*".repeat(board.getCells()[i].getNumberOfSmallGems()));
-
-            } // downcast
-            
-
+            for (Node child : pane.getChildren()) {
+                if (child instanceof Text) {
+                    Text text = (Text) child;
+                    if (child.getId().startsWith("numGems")) {
+                        text.setText(Integer.toString(board.getCells()[i].getGemList().size()));
+                    }if (child.getId().startsWith("small")) {
+                        text.setText("*".repeat(board.getCells()[i].getNumberOfSmallGems()));
+                    }
+                    if (child.getId().startsWith("big")) {
+                        text.setText("*".repeat(board.getCells()[i].getNumberOfBigGems()));
+                    }
+                }
+            }
 
         }
         scorePlayer2.setText(Integer.toString(players.getScore(player2Name)));
@@ -482,44 +478,49 @@ public class PlayController{
         // int delayMilliseconds = 2000; // Delay between each cell update
         // int intermediateFrames = 10; // Number of intermediate frames between each cell update
         // int totalFrames = itinerary.size() * (intermediateFrames + 1); // Total number of frames
- 
+        int longDisplay = itinerary.size() ;
         if (!itinerary.isEmpty()) { // Add a check to avoid accessing an empty list
-            int i = 0;
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-                Cell cell = itinerary.get(i);
-                int index = cell.getLocation();
-                Pane pane = paneList.get(index);
+            // int i = 0;
+            timeline.getKeyFrames().clear();
+            for (int i = 0; i < itinerary.size(); i++){
+                int index = i;
+            timeline.getKeyFrames().addAll(new KeyFrame(Duration.seconds(longDisplay-i), event -> {
+                Cell cell = itinerary.get(index);
+                int id = cell.getLocation();
+                Pane pane = paneList.get(id);
 
-                if ((index == 0) || (index == 6)) {
-                    // Set number of gems
-                    Text numberOfGems = (Text) pane.getChildren().get(1);
-                    // Set gems appearance
-                    numberOfGems.setText(Integer.toString(cell.getGemList().size()));
-                    Text numberOfSmallGems = (Text) pane.getChildren().get(0);
-                    numberOfSmallGems.setText("*".repeat(cell.getNumberOfSmallGems()));
-                    Text numberOfBigGems = (Text) pane.getChildren().get(2);
-                    numberOfBigGems.setText("*".repeat(board.getCells()[index].getNumberOfBigGems()));
-                } else {
-                    Text numberOfGems = (Text) pane.getChildren().get(1);
-                    numberOfGems.setText(Integer.toString(cell.getGemList().size()));
-                    Text numberOfSmallGems = (Text) pane.getChildren().get(0);
-                    numberOfSmallGems.setText("*".repeat(board.getCells()[index].getNumberOfSmallGems()));
-                } // downcast
-                i++;
-                if (i >= itinerary.size()) {
-                    timeline.stop(); // Stop the timeline when all cells have been updated
+                for (Node child : pane.getChildren()) {
+                    if (child instanceof Text) {
+                        Text text = (Text) child;
+                        if (child.getId().startsWith("numGems")) {
+                            text.setText(Integer.toString(board.getCells()[id].getGemList().size()));
+                        }if (child.getId().startsWith("small")) {
+                            text.setText("*".repeat(board.getCells()[id].getNumberOfSmallGems()));
+                        }
+                        if (child.getId().startsWith("big")) {
+                            text.setText("*".repeat(board.getCells()[id].getNumberOfBigGems()));
+                        }
+                    }
                 }
+            
+                
+                
                 
             }));
-            
+            if (index >= itinerary.size()) {
+                    timeline.stop();
+                    scorePlayer2.setText(Integer.toString(players.getScore(player2Name)));
+                    scorePlayer1.setText(Integer.toString(players.getScore(player1Name)));
+                     // Stop the timeline when all cells have been updated
+                }
 
-
-        timeline.setCycleCount(itinerary.size());
+            }
+        
+        // timeline.setCycleCount(itinerary.size());
         timeline.play();
 
         
-        scorePlayer2.setText(Integer.toString(players.getScore(player2Name)));
-        scorePlayer1.setText(Integer.toString(players.getScore(player1Name)));
+        
         }
         
         
