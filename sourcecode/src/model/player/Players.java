@@ -50,7 +50,6 @@ public class Players { //set action of players with board. Do not make for each 
     }
 
     public int getTurn(){
-        
         return turn;
     }
     
@@ -94,7 +93,6 @@ public class Players { //set action of players with board. Do not make for each 
         }
     }
     
-
     public int getScore(String player){
         if (player.equals(this.getPlayer1())){
             return this.score1;
@@ -104,12 +102,29 @@ public class Players { //set action of players with board. Do not make for each 
         }
         return 0;
     }
+
     public void setItinerary(List<Cell> itinerary){
         this.itinerary = itinerary;
     }
+
     public List<Cell> getItinerary(){
         return itinerary;
     }
+    public void assembleSmallGems(){
+
+    for (int i = 0; i < board.getNumSquares()/2; i++){
+        Cell cell1 = board.getPlayer1Cells()[i];
+        int earnedScore1 = earnScore(cell1);
+        cell1.setEmpty();
+        this.computeScore(this.getPlayer1(), earnedScore1);
+
+        Cell cell2 = board.getPlayer2Cells()[i];
+        int earnedScore2 = earnScore(cell2);
+        cell2.setEmpty();
+        this.computeScore(this.getPlayer2(), earnedScore2);
+        }
+    }
+    
 
 
     public void spreadGems(String player, Cell cellChosen, int direction){
@@ -122,7 +137,6 @@ public class Players { //set action of players with board. Do not make for each 
             if (cellChosen.isEmpty()) {
                 // switch turn
                 return;
-
             }
 
             if (direction == 1){ //clockwise
@@ -134,11 +148,13 @@ public class Players { //set action of players with board. Do not make for each 
                     // Calculate the index correctly
                     Cell nextCell = board.getCells()[index];
                     nextCell.addGem(gemList.get(i));
-                    itinerary.add(nextCell);
+                    Cell copyNextCell = nextCell.copyCell();
+                    itinerary.add(copyNextCell);
                 }
                 cellChosen.setEmpty();
+                Cell copyCellChosen = cellChosen.copyCell();
                 int itinerarySize = itinerary.size();
-                itinerary.add(itinerarySize-numberOfGems,cellChosen);
+                itinerary.add(itinerarySize-numberOfGems,copyCellChosen);
                 
 
                 //check contuinity
@@ -160,10 +176,12 @@ public class Players { //set action of players with board. Do not make for each 
                     while ((nextStopCell.isEmpty()) && !(board.getNextCellClockwise(nextStopCell).isEmpty()) ){
                     Cell earnedCell = board.getNextCellClockwise(nextStopCell);
                     int earnedScore = earnScore(earnedCell);
+                    computeScore(player,earnedScore);
                     // System.out.println(earnedScore);
                     earnedCell.setEmpty();
-                    itinerary.add(earnedCell);
-                    computeScore(player,earnedScore);
+                    Cell copyEarnedCell = earnedCell.copyCell();
+                    itinerary.add(copyEarnedCell);
+
                     nextStopCell = board.getNextCellClockwise(earnedCell);
                     //switch turn
                     }
@@ -179,12 +197,16 @@ public class Players { //set action of players with board. Do not make for each 
                     int index = (locationChosen - i - 1 + totalCell) % totalCell; // Calculate the index correctly
                     Cell nextCell = board.getCells()[index];
                     nextCell.addGem(gemList.get(i));
-                    itinerary.add(nextCell);
+                    Cell copyNextCell = nextCell.copyCell();
+                    itinerary.add(copyNextCell);
+                    // System.out.println("location run"+nextCell.getLocation()+ "size"+nextCell.getGemList().size());
+
                 }
                 cellChosen.setEmpty();
+                Cell copyCellChosen = cellChosen.copyCell();
                 int itinerarySize = itinerary.size();
-                itinerary.add(itinerarySize-numberOfGems,cellChosen);
-                
+                itinerary.add(itinerarySize-numberOfGems,copyCellChosen);
+        
 
                 //check contuinity
                 stopCell = board.getCells()[(locationChosen - numberOfGems + totalCell) % totalCell];
@@ -205,10 +227,12 @@ public class Players { //set action of players with board. Do not make for each 
                         if (earnedCell.getGemList().size() > 0){
                             int earnedScore = earnScore(earnedCell);
                             earnedCell.setEmpty();
-                            itinerary.add(earnedCell);
+                            Cell copyEarnedCell = earnedCell.copyCell();
+                            itinerary.add(copyEarnedCell);
                             this.computeScore(player, earnedScore);
                             nextStopCell = board.getNextCellCounterClockwise(earnedCell);
                         }
+                        return;
                         //switch turn
                     }
                 }
@@ -216,34 +240,23 @@ public class Players { //set action of players with board. Do not make for each 
         }
     
 
-    public void assembleSmallGems(){
 
-        for (int i = 0; i < board.getNumSquares()/2; i++){
-            Cell cell1 = board.getPlayer1Cells()[i];
-            int earnedScore1 = earnScore(cell1);
-            cell1.setEmpty();
-            this.computeScore(this.getPlayer1(), earnedScore1);
-
-            Cell cell2 = board.getPlayer2Cells()[i];
-            int earnedScore2 = earnScore(cell2);
-            cell2.setEmpty();
-            this.computeScore(this.getPlayer2(), earnedScore2);
-        }
-    }
 
     public static void main(String[] args){
         Board board = new Board();
         Players player = new Players("player1", "player2", board);
-        Cell cell = board.getCells()[1];
-        player.spreadGems("player1", cell, 1);
-        System.out.println(player.getScore("player1"));
-        System.out.println(player.getScore("player2"));
-        System.out.println(player.getItinerary().size());
+        Cell cell = board.getCells()[9];
+        player.spreadGems("player1", cell, 0);
+        // System.out.println(player.getScore("player1"));
+        // System.out.println(player.getScore("player2"));
+        for (Cell cells : player.getItinerary()){
+            System.out.println("location" + cells.getLocation() + "size" + cells.getGemList().size());
+        }
         // player.setItinerary(new ArrayList<Integer>());
-        Cell cell2 = board.getCells()[8];
-        player.spreadGems("player2", cell2, 0);
-        System.out.println(player.getScore("player1"));
-        System.out.println(player.getScore("player2"));
+        // Cell cell2 = board.getCells()[8];
+        // player.spreadGems("player2", cell2, 0);
+        // System.out.println(player.getScore("player1"));
+        // System.out.println(player.getScore("player2"));
         System.out.println(player.getItinerary().size());
 
     }
