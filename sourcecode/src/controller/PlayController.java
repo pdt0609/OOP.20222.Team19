@@ -465,9 +465,6 @@ public class PlayController{
     }
 
 
-
-
- 
     public void setMotionDisplay(List<Cell> itinerary, Pane paneChosen) {
         // int delayMilliseconds = 2000; // Delay between each cell update
         // int intermediateFrames = 10; // Number of intermediate frames between each cell update
