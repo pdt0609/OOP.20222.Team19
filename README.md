@@ -30,9 +30,11 @@ Le Thanh Thang 20194451
 
 3, Doan Trong Tan(10%):
 - Implements Gem package, application
+- Fix playcontroller
 
 4, Le Thanh Thang(10%):
--	Commit images
+-	Commit images, application
+-	Fix test package
 
 
 
