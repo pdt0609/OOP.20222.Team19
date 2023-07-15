@@ -1,18 +1,38 @@
-## Getting Started
+# OOP.20222.Team19
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+# Members:
+Pham Duc Thanh 20210795   https://github.com/pdt0609
 
-## Folder Structure
+Nguyen Ba Thiem 20214931   https://github.com/thiemcun203
 
-The workspace contains two folders by default, where:
+Doan Trong Tan 20194831   https://github.com/ttan142
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+Le Thanh Thang 20194451    https://github.com/ltthangds86
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+# Assignment of members:
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+1,Pham Duc Thanh(40%):
+-	Design Board(40%) :board, cell.
+-	Test for board package and player package
+- Create Help.fxml 
+-	Fix Home.fxml and Play.fxml
+-	Design HelpScreenController
+- Fix HomeController and PlayController
+- Design Use case and several class diagrams
+-	Writing report
 
-## Dependency Management
+2, Nguyen Ba Thiem(40%):
+-	Design Board(60%): Half-circle, pickable, square
+-	Player(100%)
+-	Create Home.fxml and Play.fxml
+-	Implement HomeController and PlayController
+-	Create project background and gameplay images
+-	Writing slide
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+3, Doan Trong Tan(10%):
+- Implements Gem package, application
+- Fix playcontroller
+
+4, Le Thanh Thang(10%):
+-	Commit images, application
+-	Fix test package
