@@ -1,7 +1,9 @@
 package model.player;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import model.board.Board;
 import model.board.Cell;
@@ -17,6 +19,7 @@ public class Players { //set action of players with board. Do not make for each 
     private Cell cellChosen;
     private int direction;
     private Board board;
+    private static LinkedHashMap<Integer, Integer> creditHistory = new LinkedHashMap<Integer, Integer>(); // (1,5) -> player 1 borrow 5 small gems form player 2. need to reset at new game
     private List<Cell> itinerary = new ArrayList<Cell>(); 
     
     public Players(String player1, String player2, Board board){ // need to construct player vs board at first
@@ -76,22 +79,46 @@ public class Players { //set action of players with board. Do not make for each 
         }
     }
 
-    public void reduceScore(String player){
+    public void reduceScore(String player){  //default 5 gems borrowed
+        reduceScore(player, 5);
+    }
+
+    public void reduceScore(String player, int score){
         if (player.equals(this.getPlayer1())){
-            this.score1 = this.score1 - 5;
-            for (int i = 0; i< 5; i++){
+            this.score1 = this.score1 - score;
+            for (int i = 0; i< score; i++){
                 Gem smallGem = new SmallGem();
                 board.getCells()[i+1].addGem(smallGem);
             }
         } 
         else if (player.equals(this.getPlayer2())){
-            this.score2 = this.score2 - 5;
-            for (int i = 0; i< 5; i++){
+            this.score2 = this.score2 - score;
+            for (int i = 0; i< score; i++){
                 Gem smallGem = new SmallGem();
                 board.getCells()[i+board.getNumSquares()/2+2].addGem(smallGem);
             }
         }
     }
+
+    public void borrow(String player1, String player2){ // 1 borrow 2
+        if (player1.equals(this.getPlayer1())){
+            this.score2 = this.score2 - 5;
+            creditHistory.put(1, 5);
+            for (int i = 0; i < 5; i++){
+                Gem smallGem = new SmallGem();
+                board.getCells()[i+1].addGem(smallGem);
+            }
+        } 
+        else if (player1.equals(this.getPlayer2())){
+            this.score1 = this.score1 - 5;
+            creditHistory.put(2, 5);
+            for (int i = 0; i < 5; i++){
+                Gem smallGem = new SmallGem();
+                board.getCells()[i+board.getNumSquares()/2+2].addGem(smallGem);
+            }
+        }
+    }
+
     
     public int getScore(String player){
         if (player.equals(this.getPlayer1())){
@@ -110,28 +137,36 @@ public class Players { //set action of players with board. Do not make for each 
     public List<Cell> getItinerary(){
         return itinerary;
     }
-    public void assembleSmallGems(List<Cell> itinerary){
+    public void assembleSmallGems(List<Cell> itinerary){  // it takes gems on side and pay gems debt automatically
 
-    for (int i = 0; i < board.getNumSquares()+board.getNumHalfCircles(); i++){
+    for (int i = 0; i < board.getNumSquares() + board.getNumHalfCircles(); i++){
 
         if (i !=0 && i!=6){
             Cell cell = board.getCells()[i];
-            // int earnedScore = earnScore(cell);
+            int earnedScore = earnScore(cell);
             cell.setEmpty();
 
+            if (i<6){
+                this.computeScore(this.getPlayer1(), earnedScore);
+            }
+            else if (i>6){
+                this.computeScore(this.getPlayer2(), earnedScore);
+            }
+            //save itinerary
             Cell copyCell = cell.copyCell();
             itinerary.add(copyCell);
-            // if (i<6){
-                
-            //     this.computeScore(this.getPlayer1(), earnedScore);
+            }
+        }
 
-            // }
-            // else if (i>6){
-                
-            //     this.computeScore(this.getPlayer2(), earnedScore);
-            // }
-            
-
+        //return borrowed gems
+        for (Map.Entry<Integer, Integer> entry : creditHistory.entrySet()) {
+            if (entry.getKey() == 1){
+                this.computeScore(player2, entry.getValue());
+                this.reduceScore(player1); // always maximum 5. defalt 5
+            }
+            else if (entry.getKey() == 2){
+                this.computeScore(player1, entry.getValue());
+                this.reduceScore(player2); // always maximum 5. defalt 5
             }
         }
     }
@@ -153,7 +188,6 @@ public class Players { //set action of players with board. Do not make for each 
             if (direction == 1){ //clockwise
                 
                 //spread first round
-                
                 for (int i = 0; i < numberOfGems; i++) {
                     int index = (locationChosen + i + 1) % totalCell; 
                     // Calculate the index correctly
@@ -181,7 +215,6 @@ public class Players { //set action of players with board. Do not make for each 
                 else if (!(nextStopCell.isEmpty()) && !(nextStopCell instanceof Pickable)){
                     //switch turn
                     return;
-                    
                 }
                 else{
                     while ((nextStopCell.isEmpty()) && !(board.getNextCellClockwise(nextStopCell).isEmpty()) ){
@@ -249,6 +282,10 @@ public class Players { //set action of players with board. Do not make for each 
                 }
             }
         }
+
+    public void resetCreditHistory(){
+        creditHistory = new LinkedHashMap<Integer, Integer>();
+    }
     
 
 

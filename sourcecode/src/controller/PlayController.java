@@ -257,18 +257,34 @@ public class PlayController{
                         System.out.println("Cell could not be clicked");
                         if (players.getTurn() == 1){
                             if (board.checkNoGemsOnSide(player1Name)){
-                            players.reduceScore(player1Name);
-                            this.setDisplay(board);
+                                if (players.getScore(player1Name) >= 5){
+                                    players.reduceScore(player1Name);
+                                    this.setDisplay(board);
+                                }
+                                else if (players.getScore(player1Name) < 5 && players.getScore(player2Name) >= 5){
+                                    players.borrow(player1Name, player2Name);
+                                    this.setDisplay(board);
+                        
+                                }
+                                // do not consider if both players have score < 5, it is impossible
                             }
 
                         }
                         else if (players.getTurn() == 2){
                             if (board.checkNoGemsOnSide(player2Name)){
-                            players.reduceScore(player2Name);
-                            this.setDisplay(board);
+                                if (players.getScore(player2Name) >= 5){
+                                    players.reduceScore(player2Name);
+                                    this.setDisplay(board);
+                                }
+                                else if (players.getScore(player2Name) < 5 && players.getScore(player1Name) >= 5){
+                                    players.borrow(player2Name,player1Name);
+                                    this.setDisplay(board);
+                                }
                             }
                         }
                     }
+
+
                     else{
                         System.out.println("Cell clicked");
                         
@@ -305,25 +321,19 @@ public class PlayController{
                             } else if (imageView.getId().startsWith("btnCL")) {
                                 players.setDirection(1);
                             }
-                            
+                            System.out.println(player1Name + " " + players.getScore(player1Name) + " " + player2Name + " " + players.getScore(player2Name));
+
                             //spread gems
                             if (players.getTurn() == 1){
                                 players.spreadGems(player1Name,board.getCells()[index], players.getDirection());
-        
-                                // System.out.println(itin.size());
                             }
                             if(players.getTurn() == 2){
                                 players.spreadGems(player2Name,board.getCells()[index], players.getDirection());
-                                // System.out.println(itin.size());
                             }
 
                             //fake end game
-                            board.getCells()[0].setEmpty();
-                            board.getCells()[6].setEmpty();
-
-
-                            
-                            
+                            // board.getCells()[0].setEmpty();
+                            // board.getCells()[6].setEmpty();
 
                             //check end game (inside)
                             if (board.endGame()){
@@ -336,20 +346,19 @@ public class PlayController{
                                     winnerName.setText("2");
                                 }
                                 else{
-                                    winnerName.setText("Draw");
+                                    winnerName.setText("draw");
                                 }
                                 winnerScore1.setText(Integer.toString(players.getScore(player1Name)));
                                 winnerScore2.setText(Integer.toString(players.getScore(player2Name)));
-
-                                endGameScreen.setVisible(true);
 
                             }
 
                             for (Cell cell : players.getItinerary()){
                                 System.out.println("location" + cell.getLocation() + "size" + cell.getGemList().size());
                             }
+                            System.out.println(player1Name + " " + players.getScore(player1Name) + " " + player2Name + " " + players.getScore(player2Name));
                             //display number of gems
-                            this.setMotionDisplay(players.getItinerary(),pane);
+                            this.setMotionDisplay(players.getItinerary(), pane);
 
                             players.setItinerary(new ArrayList<Cell>());
  
@@ -367,6 +376,7 @@ public class PlayController{
         int randTurn = rand.nextInt(2) + 1;
         players.setTurn(randTurn);
         if (players.getTurn() == 1){
+
             turnPlayer1.setVisible(true);
             turnPlayer2.setVisible(false);
             //set able for cells 1
@@ -480,46 +490,31 @@ public class PlayController{
 
 
     public void setMotionDisplay(List<Cell> itinerary, Pane paneChosen) {
-        // int delayMilliseconds = 2000; // Delay between each cell update
-        // int intermediateFrames = 10; // Number of intermediate frames between each cell update
-        // int totalFrames = itinerary.size() * (intermediateFrames + 1); // Total number of frames
+    
         List<Node> children = paneChosen.getChildren();
-
         // Set both direction buttons in the pane to invisible
         for (Node child : children) {
             if (child instanceof ImageView) {
                 child.setVisible(false);
             }
         }
+
         int longDisplay = itinerary.size() ;
         if (!itinerary.isEmpty()) { // Add a check to avoid accessing an empty list
             // int i = 0;
             timeline.getKeyFrames().clear();
-            for (int i = 0; i < longDisplay; i++){
+            for (int i = 0; i < longDisplay + 2; i++){
                 int index = i;
                 
-                timeline.getKeyFrames().addAll(new KeyFrame(Duration.seconds(i*0.5), event -> {
-                
-                Cell cell = itinerary.get(index);
-                System.out.println("Run location" + cell.getLocation() + "Run size" + cell.getGemList().size());
-                int id = cell.getLocation();
-                Pane pane = paneList.get(id);
-                
-                    for (Node child : pane.getChildren()) {
-                        if (child instanceof Text) {
-                            Text text = (Text) child; //downcasting
-                            if (child.getId().startsWith("numGems")) {
-                                text.setText(Integer.toString(cell.getGemList().size()));
-                            }if (child.getId().startsWith("small")) {
-                                text.setText("*".repeat(cell.getNumberOfSmallGems()));
-                            }
-                            if (child.getId().startsWith("big")) {
-                                text.setText("*".repeat(cell.getNumberOfBigGems()));
-                            }
-                        }
-                    }
-                if (board.endGame()){
-                    if(index >= longDisplay - 10){
+                timeline.getKeyFrames().addAll(new KeyFrame(Duration.seconds(i*0.5), event -> { // time to display
+                if (!board.endGame()){
+                    if (index < longDisplay){
+                        Cell cell = itinerary.get(index);
+                        System.out.println("Run location" + cell.getLocation() + "Run size" + cell.getGemList().size());
+
+                        int id = cell.getLocation();
+                        Pane pane = paneList.get(id);
+
                         for (Node child : pane.getChildren()) {
                             if (child instanceof Text) {
                                 Text text = (Text) child; //downcasting
@@ -533,22 +528,44 @@ public class PlayController{
                                 }
                             }
                         }
-                        scorePlayer1.setText(Integer.toString(players.getScore(player1Name)));
-                        scorePlayer2.setText(Integer.toString(players.getScore(player2Name)));
-
+                    
+                        
 
                     }
-
-
+                    if (index == longDisplay){
+                        switchTurn(paneChosen);
+                    }
                 }
-                    
 
-            }));
+                if (board.endGame()){ // it actually always true because results were computed before
+                    Cell cell = itinerary.get(index);
+                    System.out.println("Run location" + cell.getLocation() + "Run size" + cell.getGemList().size());
+
+                    int id = cell.getLocation();
+                    Pane pane = paneList.get(id);
+
+                    for (Node child : pane.getChildren()) {
+                        if (child instanceof Text) {
+                            Text text = (Text) child; //downcasting
+                            if (child.getId().startsWith("numGems")) {
+                                text.setText(Integer.toString(cell.getGemList().size()));
+                            }if (child.getId().startsWith("small")) {
+                                text.setText("*".repeat(cell.getNumberOfSmallGems()));
+                            }
+                        }
+                    }
+                    scorePlayer1.setText(Integer.toString(players.getScore(player1Name)));
+                    scorePlayer2.setText(Integer.toString(players.getScore(player2Name)));
+                    endGameScreen.setVisible(true);
+                    players.resetCreditHistory();
+                }
                 
+            }));
+            scorePlayer1.setText(Integer.toString(players.getScore(player1Name)));
+            scorePlayer2.setText(Integer.toString(players.getScore(player2Name)));
             }
 
         }
-        
         // timeline.setCycleCount(itinerary.size());
         timeline.play();
 

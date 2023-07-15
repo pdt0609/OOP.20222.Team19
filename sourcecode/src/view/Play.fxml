@@ -370,7 +370,7 @@
             </Text>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="helpScreen" layoutX="34.0" layoutY="92.0" opacity="0.14" prefHeight="600.0" prefWidth="960.0">
+      <AnchorPane fx:id="helpScreen" layoutX="34.0" layoutY="92.0" opacity="100.0" prefHeight="600.0" prefWidth="960.0">
          <children>
             <ImageView fitHeight="600.0" fitWidth="960.0" pickOnBounds="true" preserveRatio="true">
                <image>
