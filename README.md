@@ -37,5 +37,7 @@ Le Thanh Thang 20194451    https://github.com/ltthangds86
 -	Commit images, application
 -	Fix test package
 
+# Run our project
+Run the Main.java file to start game from sourcecode/src.
 
 
