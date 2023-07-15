@@ -177,11 +177,14 @@ public class Players { //set action of players with board. Do not make for each 
     
     public void spreadGems(String player, int locationChosen, int direction){
             Cell stopCell;
-            Cell cellChosen = board.getCells()[locationChosen];
-            // int locationChosen = copyChosen.getLocation();
-            final List<Gem> gemList = cellChosen.getGemList(); //pass by reference
+            Cell cellChosen = board.getCells()[locationChosen].copyCell();
+            List<Gem> gemList = cellChosen.getGemList(); //pass by reference
             int numberOfGems = gemList.size();
             int totalCell = board.getCells().length;
+
+            board.getCells()[locationChosen].setEmpty();
+            Cell copyCellChosen = board.getCells()[locationChosen].copyCell();
+            itinerary.add(copyCellChosen);
 
             if (cellChosen.isEmpty()) {
                 // switch turn
@@ -200,10 +203,8 @@ public class Players { //set action of players with board. Do not make for each 
                     Cell copyNextCell = board.getCells()[index].copyCell();
                     itinerary.add(copyNextCell);
                 }
-                board.getCells()[locationChosen].setEmpty();
-                Cell copyCellChosen = board.getCells()[locationChosen].copyCell();
-                int itinerarySize = itinerary.size();
-                itinerary.add(itinerarySize-numberOfGems,copyCellChosen);
+               
+
                 
 
                 //check contuinity
@@ -256,12 +257,6 @@ public class Players { //set action of players with board. Do not make for each 
                     itinerary.add(copyNextCell);
 
                 }
-                board.getCells()[locationChosen].setEmpty();
-                Cell copyCellChosen = board.getCells()[locationChosen].copyCell();
-                int itinerarySize = itinerary.size();
-                itinerary.add(itinerarySize-numberOfGems,copyCellChosen);
-                
-        
 
                 //check contuinity
                 stopCell = board.getCells()[(locationChosen - numberOfGems + totalCell) % totalCell];
