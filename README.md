@@ -1,13 +1,13 @@
 # OOP.20222.Team19
 
 # Members:
-Pham Duc Thanh 20210795
+Pham Duc Thanh 20210795   https://github.com/pdt0609
 
-Nguyen Ba Thiem 20214931		
+Nguyen Ba Thiem 20214931   https://github.com/thiemcun203
 
-Doan Trong Tan 20194831
+Doan Trong Tan 20194831   https://github.com/ttan142
 
-Le Thanh Thang 20194451
+Le Thanh Thang 20194451    https://github.com/ltthangds86
 
 # Assignment of members:
 
