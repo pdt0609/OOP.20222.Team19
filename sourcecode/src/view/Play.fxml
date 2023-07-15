@@ -348,7 +348,7 @@
                   <Font name="Montserrat Alternates ExtraBold" size="38.0" />
                </font>
             </Text>
-            <Text fx:id="player1winner" fill="WHITE" layoutX="80.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Player 1" textAlignment="RIGHT" wrappingWidth="185.3349609375">
+            <Text fx:id="player1Winner" fill="WHITE" layoutX="80.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Player 1" textAlignment="RIGHT" wrappingWidth="185.3349609375">
                <font>
                   <Font name="SansSerif Bold" size="35.0" />
                </font>
