@@ -35,5 +35,16 @@ public abstract class Cell {
     public void setEmpty(){
         this.gemList.clear();
     }
+    public String seeDetails() {
+        StringBuffer gemDetails = new StringBuffer();
+        for(Gem gem:this.gemList) {
+            gemDetails.append(gem);
+        }
+        return(
+                 "-"+"Cell " + this.getClass().getSimpleName() +
+                        ", number of gems: " + this.getGemList().size() +
+                        ", gem list: " + gemDetails+"\n"
+                );
+    }
 
 }
