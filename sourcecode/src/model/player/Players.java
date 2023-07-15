@@ -16,18 +16,17 @@ public class Players { //set action of players with board. Do not make for each 
     private String player1;
     private String player2;
     private int turn;
-    private Cell cellChosen;
+    
     private int direction;
     // private static Board board;
-    private Board board;
+    private Board board; // association -> pass to use
     private static LinkedHashMap<Integer, Integer> creditHistory = new LinkedHashMap<Integer, Integer>(); // (1,5) -> player 1 borrow 5 small gems form player 2. need to reset at new game
     private List<Cell> itinerary = new ArrayList<Cell>(); 
     
-    public Players(String player1, String player2, Board board){ // need to construct player vs board at first
+    public Players(String player1, String player2){ // need to construct player vs board at first
         this.player1 = player1;
         this.player2 = player2;
-        // Players.board = board;
-        this.board =board;
+
     }
 
 
@@ -47,13 +46,13 @@ public class Players { //set action of players with board. Do not make for each 
         this.direction = direction;
     }
 
-    public Cell getCellChosen(){
-        return cellChosen;
-    }
+    // public Cell getCellChosen(){
+    //     return cellChosen;
+    // }
 
-    public void setCellChosen(Cell cellChosen){
-        this.cellChosen = cellChosen;
-    }
+    // public void setCellChosen(Cell cellChosen){
+    //     this.cellChosen = cellChosen;
+    // }
 
     public int getTurn(){
         return turn;
@@ -82,11 +81,11 @@ public class Players { //set action of players with board. Do not make for each 
         }
     }
 
-    public void reduceScore(String player){  //default 5 gems borrowed
-        reduceScore(player, 5);
+    public void reduceScore(String player, Board board){  //default 5 gems borrowed
+        reduceScore(player, 5, board);
     }
 
-    public void reduceScore(String player, int score){
+    public void reduceScore(String player, int score, Board board){
         if (player.equals(this.getPlayer1())){
             this.score1 = this.score1 - score;
             for (int i = 0; i< score; i++){
@@ -103,7 +102,7 @@ public class Players { //set action of players with board. Do not make for each 
         }
     }
 
-    public void borrow(String player1, String player2){ // 1 borrow 2
+    public void borrow(String player1, String player2, Board board){ // 1 borrow 2
         if (player1.equals(this.getPlayer1()) && player2.equals(this.getPlayer2())){
             this.score2 = this.score2 - 5;
             creditHistory.put(1, 5);
@@ -140,7 +139,7 @@ public class Players { //set action of players with board. Do not make for each 
     public List<Cell> getItinerary(){
         return itinerary;
     }
-    public void assembleSmallGems(List<Cell> itinerary){  // it takes gems on side and pay gems debt automatically
+    public void assembleSmallGems(List<Cell> itinerary, Board board){  // it takes gems on side and pay gems debt automatically
 
     for (int i = 0; i < board.getNumSquares() + board.getNumHalfCircles(); i++){
 
@@ -166,138 +165,141 @@ public class Players { //set action of players with board. Do not make for each 
         for (Map.Entry<Integer, Integer> entry : creditHistory.entrySet()) {
             if (entry.getKey() == 1){
                 this.computeScore(player2, entry.getValue());
-                this.reduceScore(player1); // always maximum 5. defalt 5
+                this.reduceScore(player1, board); // always maximum 5. defalt 5
             }
             else if (entry.getKey() == 2){
                 this.computeScore(player1, entry.getValue());
-                this.reduceScore(player2); // always maximum 5. defalt 5
+                this.reduceScore(player2, board); // always maximum 5. defalt 5
             }
         }
     }
     
-    public void spreadGems(String player, int locationChosen, int direction){
+    public void spreadGems(String player, int locationChosen, int direction, Board board){
             Cell stopCell;
-            Cell cellChosen = board.getCells()[locationChosen];
-            // int locationChosen = copyChosen.getLocation();
-            final List<Gem> gemList = cellChosen.getGemList(); //pass by reference
-            int numberOfGems = gemList.size();
+
+            final  //pass by reference
+            
             int totalCell = board.getCells().length;
 
-            if (cellChosen.isEmpty()) {
-                // switch turn
-                return;
-            }
 
             if (direction == 1){ //clockwise
-                
+        
                 //spread first round
-                
-                for (int i = 0; i < numberOfGems; i++) {
-                    int index = (locationChosen + i + 1) % totalCell; 
-                    // Calculate the index correctly
-                    Cell nextCell = board.getCells()[index];
-                    board.getCells()[index].addGem(gemList.get(i));
-                    Cell copyNextCell = board.getCells()[index].copyCell();
-                    itinerary.add(copyNextCell);
-                }
-                board.getCells()[locationChosen].setEmpty();
-                Cell copyCellChosen = board.getCells()[locationChosen].copyCell();
-                int itinerarySize = itinerary.size();
-                itinerary.add(itinerarySize-numberOfGems,copyCellChosen);
-                
-
-                //check contuinity
-                stopCell = board.getCells()[(locationChosen + numberOfGems) % totalCell];
-                Cell nextStopCell = board.getNextCellClockwise(stopCell);
-
-                if (!(nextStopCell.isEmpty()) && (nextStopCell instanceof Pickable)){  //using interface to force pick
-                    int nextLocation = nextStopCell.getLocation();
-                
-                    spreadGems(player,nextLocation, direction);
+                while(true){
+                    Cell cellChosen = board.getCells()[locationChosen].copyCell();
+                    List<Gem> gemList = cellChosen.getGemList(); // pass by reference so need to copy avoid out of list exception
+                    int numberOfGems = gemList.size();
+                    board.getCells()[locationChosen].setEmpty();
+                    Cell copyCellChosen = board.getCells()[locationChosen].copyCell();
+                    itinerary.add(copyCellChosen);
                     
-                    
-                }
-                else if ((nextStopCell.isEmpty()) && (board.getNextCellClockwise(nextStopCell).isEmpty())){
-                    //switch turn
-                    return;
-                }
-                else if (!(nextStopCell.isEmpty()) && !(nextStopCell instanceof Pickable)){
-                    //switch turn
-                    return;
-                    
-                }
-                else{
-                    while ((nextStopCell.isEmpty()) && !(board.getNextCellClockwise(nextStopCell).isEmpty()) ){
-                    Cell earnedCell = board.getNextCellClockwise(nextStopCell);
-                    int earnedScore = earnScore(earnedCell);
-                    computeScore(player,earnedScore);
-                    // System.out.println(earnedScore);
-                    earnedCell.setEmpty();
-                    Cell copyEarnedCell = earnedCell.copyCell();
-                    copyEarnedCell.setEarnedCell();
-                    itinerary.add(copyEarnedCell);
-
-                    nextStopCell = board.getNextCellClockwise(earnedCell);
-                    //switch turn
+                    for (int i = 0; i < numberOfGems; i++) {
+                        int index = (locationChosen + i + 1) % totalCell; 
+                        // Calculate the index correctly
+                        board.getCells()[index].addGem(gemList.get(i));
+                        Cell copyNextCell = board.getCells()[index].copyCell();
+                        itinerary.add(copyNextCell);
                     }
-                    return;
+                    
+                    // int itinerarySize = itinerary.size();
+                    // itinerary.add(itinerarySize-numberOfGems,copyCellChosen);
+                
+
+                    //check contuinity
+                    stopCell = board.getCells()[(locationChosen + numberOfGems) % totalCell];
+                    Cell nextStopCell = board.getNextCellClockwise(stopCell);
+                    System.out.println("nextstop" + nextStopCell.getGemList().size());
+
+                    if (!(nextStopCell.isEmpty()) && (nextStopCell instanceof Pickable)){  //using interface to force pick
+                        locationChosen = nextStopCell.getLocation();
+                    }
+                    else if ((nextStopCell.isEmpty()) && (board.getNextCellClockwise(nextStopCell).isEmpty())){
+                        break;
+                    }
+                    else if (!(nextStopCell.isEmpty()) && !(nextStopCell instanceof Pickable)){
+                        //switch turn
+                        break;
+                    }
+                    else{
+                        while ((nextStopCell.isEmpty()) && !(board.getNextCellClockwise(nextStopCell).isEmpty()) ){
+                        Cell earnedCell = board.getNextCellClockwise(nextStopCell);
+                        int earnedScore = earnScore(earnedCell);
+                        computeScore(player,earnedScore);
+                        // System.out.println(earnedScore);
+                        earnedCell.setEmpty();
+                        Cell copyEarnedCell = earnedCell.copyCell();
+                        copyEarnedCell.setEarnedCell();
+                        itinerary.add(copyEarnedCell);
+
+                        nextStopCell = board.getNextCellClockwise(earnedCell);
+                        //switch turn
+                        }
+                        break;
+                    }
                 }
             }
 
             else if (direction == 0) { //counter clockwise
     
                 //spread first round
-            
-                for (int i = 0; i < numberOfGems; i++) {
+                
+
+                while (true) {
+                    Cell cellChosen = board.getCells()[locationChosen].copyCell();
+                    List<Gem> gemList = cellChosen.getGemList(); // pass by reference so need to copy avoid out of list exception
+                    int numberOfGems = gemList.size();
+                    board.getCells()[locationChosen].setEmpty();
+                    Cell copyCellChosen = board.getCells()[locationChosen].copyCell();
+                    itinerary.add(copyCellChosen);
+
+
+                    for (int i = 0; i < numberOfGems; i++) {
                     int index = (locationChosen - i - 1 + totalCell) % totalCell; // Calculate the index correctly
-                    Cell nextCell = board.getCells()[index];
                     board.getCells()[index].addGem(gemList.get(i));
                     Cell copyNextCell = board.getCells()[index].copyCell();
                     itinerary.add(copyNextCell);
 
-                }
-                board.getCells()[locationChosen].setEmpty();
-                Cell copyCellChosen = board.getCells()[locationChosen].copyCell();
-                int itinerarySize = itinerary.size();
-                itinerary.add(itinerarySize-numberOfGems,copyCellChosen);
-                
-        
-
-                //check contuinity
-                stopCell = board.getCells()[(locationChosen - numberOfGems + totalCell) % totalCell];
-                Cell nextStopCell = board.getNextCellCounterClockwise(stopCell);
-                if (!(nextStopCell.isEmpty()) && (nextStopCell instanceof Pickable)) {
-                    int nextLocation = nextStopCell.getLocation();
-                    spreadGems(player, nextLocation, direction);
-                    
-                } else if ((nextStopCell.isEmpty()) && (board.getNextCellCounterClockwise(nextStopCell).isEmpty())) {
-                    //switch turn
-                    System.out.println(this.getPlayer1() + " 2 empty" + this.getScore("player1") + " " + "player2" + " " + this.getScore("player2"));
-
-                    return;
-                } else if (!(nextStopCell.isEmpty()) && !(nextStopCell instanceof Pickable)) {
-                    //switch turn
-                    System.out.println(this.getPlayer1() + " halfcircle" + this.getScore("player1") + " " + "player2" + " " + this.getScore("player2"));
-
-                    return;
-                }
-                else{
-                    while ((nextStopCell.isEmpty()) && !(board.getNextCellCounterClockwise(nextStopCell).isEmpty())) {
-                        Cell earnedCell = board.getNextCellCounterClockwise(nextStopCell);
-                        if (earnedCell.getGemList().size() > 0){
-                            int earnedScore = earnScore(earnedCell);
-                            earnedCell.setEmpty();
-                            Cell copyEarnedCell = earnedCell.copyCell();
-                            copyEarnedCell.setEarnedCell();
-                            itinerary.add(copyEarnedCell);
-                            System.out.println("earned" + earnedCell.getLocation() + "size" + earnedCell.getGemList().size());
-                            this.computeScore(player, earnedScore);
-                            System.out.println(this.getPlayer1() + " while" + this.getScore("player1") + " " + "player2" + " " + this.getScore("player2"));
-                            nextStopCell = board.getNextCellCounterClockwise(earnedCell);
-                        }
-                        return;
-                        //switch turn
                     }
+                    
+                
+                    //check contuinity
+                    stopCell = board.getCells()[(locationChosen - numberOfGems + totalCell) % totalCell];
+                    Cell nextStopCell = board.getNextCellCounterClockwise(stopCell);
+                    System.out.println("nextstop" + nextStopCell.getGemList().size());
+                    if (!(nextStopCell.isEmpty()) && (nextStopCell instanceof Pickable)) {
+                        locationChosen = nextStopCell.getLocation();
+                    
+                    } else if ((nextStopCell.isEmpty()) && (board.getNextCellCounterClockwise(nextStopCell).isEmpty())) {
+                        //switch turn
+                        System.out.println(this.getPlayer1() + " 2 empty" + this.getScore("player1") + " " + "player2" + " " + this.getScore("player2"));
+
+                        break;
+                    } else if (!(nextStopCell.isEmpty()) && !(nextStopCell instanceof Pickable)) {
+                        //switch turn
+                        System.out.println(this.getPlayer1() + " halfcircle" + this.getScore("player1") + " " + "player2" + " " + this.getScore("player2"));
+
+                        break;
+                    }
+                    else{
+                        while ((nextStopCell.isEmpty()) && !(board.getNextCellCounterClockwise(nextStopCell).isEmpty())) {
+                            Cell earnedCell = board.getNextCellCounterClockwise(nextStopCell);
+                            if (earnedCell.getGemList().size() > 0){
+                                int earnedScore = earnScore(earnedCell);
+                                earnedCell.setEmpty();
+                                Cell copyEarnedCell = earnedCell.copyCell();
+                                copyEarnedCell.setEarnedCell();
+                                itinerary.add(copyEarnedCell);
+                                System.out.println("earned" + earnedCell.getLocation() + "size" + earnedCell.getGemList().size());
+                                this.computeScore(player, earnedScore);
+                                System.out.println(this.getPlayer1() + " while" + this.getScore("player1") + " " + "player2" + " " + this.getScore("player2"));
+                                nextStopCell = board.getNextCellCounterClockwise(earnedCell);
+                            }
+                            
+                            //switch turn
+                        }
+                        break;
+                    }
+                
                 }
             }
         }
@@ -306,7 +308,7 @@ public class Players { //set action of players with board. Do not make for each 
         creditHistory = new LinkedHashMap<Integer, Integer>();
     }
 
-    public boolean checkNoGemsOnSide(String player){ //if on player side, each square does not have any gems return true
+    public boolean checkNoGemsOnSide(String player, Board board){ //if on player side, each square does not have any gems return true
         if (player.equals(this.getPlayer1())){
             for (Cell cell : board.getPlayer1Cells()){
                 if (cell.getGemList().size() > 0){
@@ -340,15 +342,17 @@ public class Players { //set action of players with board. Do not make for each 
 
     public static void main(String[] args){
         Board board = new Board();
-        Players player = new Players("player1", "player2", board);
+        Players player = new Players("player1", "player2");
         Cell cell = board.getCells()[9];
-        player.spreadGems("player2",9, 0);
+        player.spreadGems("player2",9, 0, board);
         // System.out.println(player.getScore("player1"));
         // System.out.println(player.getScore("player2"));
         for (Cell cells : player.getItinerary()){
             if (cells.isEarnedCell()){
                 System.out.println("earned"+ cells.getLocation() + "size" + cells.getGemList().size());
             }
+            System.out.println(cells.getLocation() + "size" + cells.getGemList().size());
+
             // System.out.println("location" + cells.getLocation() + "size" + cells.getGemList().size());
         }
         // player.setItinerary(new ArrayList<Integer>());

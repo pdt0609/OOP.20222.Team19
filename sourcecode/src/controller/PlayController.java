@@ -216,7 +216,7 @@ public class PlayController{
             endGameScreen.setVisible(false);
             //reset board
             board = new Board();
-            players = new Players(player1Name,player2Name, board);
+            players = new Players(player1Name,player2Name);
             initialize();
             //display
             this.setDisplay(board);
@@ -255,11 +255,11 @@ public class PlayController{
                         if (players.getTurn() == 1){
                             if (players.checkNoGemsOnSide(player1Name)){
                                 if (players.getScore(player1Name) >= 5){
-                                    players.reduceScore(player1Name);
+                                    players.reduceScore(player1Name, board);
                                     this.setDisplay(board);
                                 }
                                 else if (players.getScore(player1Name) < 5 && players.getScore(player2Name) >= 5){
-                                    players.borrow(player1Name, player2Name);
+                                    players.borrow(player1Name, player2Name, board);
                                     this.setDisplay(board);
                         
                                 }
@@ -270,11 +270,11 @@ public class PlayController{
                         else if (players.getTurn() == 2){
                             if (players.checkNoGemsOnSide(player2Name)){
                                 if (players.getScore(player2Name) >= 5){
-                                    players.reduceScore(player2Name);
+                                    players.reduceScore(player2Name, board);
                                     this.setDisplay(board);
                                 }
                                 else if (players.getScore(player2Name) < 5 && players.getScore(player1Name) >= 5){
-                                    players.borrow(player2Name,player1Name);
+                                    players.borrow(player2Name,player1Name, board);
                                     this.setDisplay(board);
                                 }
                             }
@@ -322,11 +322,11 @@ public class PlayController{
                             //spread gems
                             if (players.getTurn() == 1){
 
-                                players.spreadGems(player1Name,index, players.getDirection());
+                                players.spreadGems(player1Name,index, players.getDirection(),board);
 
                             }
                             else if (players.getTurn() == 2){
-                                players.spreadGems(player2Name,index, players.getDirection());
+                                players.spreadGems(player2Name,index, players.getDirection(),board);
                             }
                             if (board.checkTotal()){
                                 for (Cell cell : board.getCells()){
@@ -345,7 +345,7 @@ public class PlayController{
                             // check end game (inside)
                             if (board.endGame()){
                                 System.out.println("end game");
-                                players.assembleSmallGems(players.getItinerary());
+                                players.assembleSmallGems(players.getItinerary(), board);
                                 if (players.getScore(player1Name) > players.getScore(player2Name)){
                                     winnerName.setText("1");
                                 }

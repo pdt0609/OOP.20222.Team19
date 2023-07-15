@@ -8,22 +8,22 @@ import model.gem.*;
 
 public abstract class Cell implements Cloneable{
     private int location;
-    private int numberOfGems;
+    // private int numberOfGems;
     private List<Gem> gemList = new ArrayList<Gem>();
     private boolean isEarnedCell = false;
 
-    public Cell(int location, int numberOfGems) {
+    public Cell(int location) {
         this.location = location;
-        this.numberOfGems = numberOfGems;
+        // this.numberOfGems = numberOfGems;
     }
 
     public int getLocation() {
         return location;
     }
 
-    public int getNumberOfGems() {
-        return numberOfGems; 
-    }
+    // public int getNumberOfGems() {
+    //     return numberOfGems; 
+    // }
 
     public List<Gem> getGemList() {
         return gemList;
@@ -66,7 +66,7 @@ public abstract class Cell implements Cloneable{
         Cell newCell=null;
         
         if (this instanceof Square){
-            newCell = new Square(this.getLocation(), this.getNumberOfGems());
+            newCell = new Square(this.getLocation());
               //upcasting
             for (int i=0; i<this.getNumberOfSmallGems();i++){
             newCell.addGem(new SmallGem());
@@ -74,7 +74,7 @@ public abstract class Cell implements Cloneable{
             return newCell;
         }
         else if (this instanceof HalfCircle){
-            newCell = new HalfCircle(this.getLocation(), this.getNumberOfGems());
+            newCell = new HalfCircle(this.getLocation());
             for (int i=0; i<this.getNumberOfSmallGems();i++){
                 newCell.addGem(new SmallGem());
             }
