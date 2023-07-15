@@ -10,6 +10,7 @@ Doan Trong Tan 20194831
 Le Thanh Thang 20194451
 
 # Assignment of members:
+
 1,Pham Duc Thanh(40%):
 -	Design Board(40%) :board, cell.
 -	Test for board package and player package
