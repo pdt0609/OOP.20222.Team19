@@ -5,7 +5,7 @@ This is a game about a traditional Vietnam game, called "O An Quan" or "Mandarin
 The final submission (due 16th Jul, 2023) is pushed to the `release/version-1.0` branch.
 
 Update (17-Jul, 2023):
-- `hotfix/controller`: Fix bug in checkNoGemsOnSide method and score displayed"
+- `hotfix/controller`: Fix bug in checkNoGemsOnSide method and score displayed
 
 
 # Members:
