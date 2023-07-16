@@ -38,12 +38,14 @@ Le Thanh Thang 20194451          https://github.com/ltthangds86
 -  Exception
 
 # Demo link:
-https://drive.google.com/file/d/1mNcLY3-gqm3WKQjpRUcIHK-mcl5Uk88G/view?pli=1
+https://drive.google.com/drive/folders/1pfB4P22HBhGnUU2Xtc7C63oHZwQG2Nce?usp=share_link
 
 # Run the project
+Ensure your device is available with JavaFX
 Run the Main.java file to start game from sourcecode/src.
 
 # Contact:
+Email: thiemdrem2003@gmail.com
 Email: Phamthanh060903@gmail.com
 
 
