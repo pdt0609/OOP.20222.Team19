@@ -121,14 +121,4 @@ public class Board { // is composed of cells, it can interact with cells/all met
         return true;
     }
 
-    public boolean checkTotal(){
-        int sum =0;
-        for (Cell cell: this.getCells()){
-            sum += cell.getGemList().size();
-        }
-        return sum == 60;
-    }
-
-
-
 }

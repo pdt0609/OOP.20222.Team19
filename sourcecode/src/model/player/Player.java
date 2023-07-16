@@ -27,13 +27,13 @@ public class Player {
     }
 
 
-    // @Override
-    // public boolean equals(Object obj) {
-    //     if (obj instanceof Player) {
-    //         Player player = (Player) obj;
-    //         return this.name.equals(player.name);
-    //     }
-    //     return false;
-    // }
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Player) {
+            Player player = (Player) obj;
+            return this.name.equals(player.name);
+        }
+        return false;
+    }
 
 }

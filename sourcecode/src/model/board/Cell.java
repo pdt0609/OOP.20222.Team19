@@ -8,22 +8,15 @@ import model.gem.*;
 
 public abstract class Cell implements Cloneable{
     private int location;
-    // private int numberOfGems;
     private List<Gem> gemList = new ArrayList<Gem>();
-    private boolean isEarnedCell = false;
 
     public Cell(int location) {
         this.location = location;
-        // this.numberOfGems = numberOfGems;
     }
 
     public int getLocation() {
         return location;
     }
-
-    // public int getNumberOfGems() {
-    //     return numberOfGems; 
-    // }
 
     public List<Gem> getGemList() {
         return gemList;
@@ -86,17 +79,5 @@ public abstract class Cell implements Cloneable{
         }
         return null;
     }
-
-    public void setEarnedCell(){
-        this.isEarnedCell = true;
-    }
-
-    public boolean isEarnedCell(){
-        return this.isEarnedCell;
-    }
-
-   
-
-
 
 }
