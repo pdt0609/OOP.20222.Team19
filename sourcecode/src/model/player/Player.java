@@ -4,7 +4,6 @@ package model.player;
 public class Player {
     private int score;
     private String name;
-    // private Board board; //association
     
     public Player(String name) {
         this.name = name;
@@ -25,7 +24,6 @@ public class Player {
     public void computeScore(int earnedScore) {
         this.score += earnedScore;
     }
-
 
     @Override
     public boolean equals(Object obj) {

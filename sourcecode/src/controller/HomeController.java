@@ -60,8 +60,6 @@ public class HomeController {
     @FXML
     private AnchorPane tutorialScreen;
 
-
-    
     @FXML
     void btnExitGameClicked(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -79,6 +77,7 @@ public class HomeController {
         }
 
     }
+
     @FXML
     public void initialize() {
         tutorialScreen.setVisible(false);
@@ -130,13 +129,5 @@ public class HomeController {
             nameScreen.setVisible(true);
             
         });}
-    public TextField getName1Box() {
-        return name1Box;
-
-    }
-
-    public TextField getName2Box() {
-        return name2Box;
-    }
 }
 

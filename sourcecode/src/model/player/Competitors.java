@@ -186,10 +186,7 @@ public class Competitors { //set action of players with board. Do not make for e
 
                 if (!(nextStopCell.isEmpty()) && (nextStopCell instanceof Pickable)){  //using interface to force pick
                     int nextLocation = nextStopCell.getLocation();
-                
                     spreadGems(player,nextLocation, direction);
-                    
-                    
                 }
                 else if ((nextStopCell.isEmpty()) && (board.getNextCellClockwise(nextStopCell).isEmpty())){
                     //switch turn
@@ -198,7 +195,6 @@ public class Competitors { //set action of players with board. Do not make for e
                 else if (!(nextStopCell.isEmpty()) && !(nextStopCell instanceof Pickable)){
                     //switch turn
                     return;
-                    
                 }
                 else{
                     while ((nextStopCell.isEmpty()) && !(board.getNextCellClockwise(nextStopCell).isEmpty()) ){
@@ -231,7 +227,6 @@ public class Competitors { //set action of players with board. Do not make for e
                     board.getCells()[index].addGem(gemList.get(i));
                     Cell copyNextCell = board.getCells()[index].copyCell();
                     itinerary.add(copyNextCell);
-
                 }
 
                 //check contuinity

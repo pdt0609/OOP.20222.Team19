@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -15,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -126,12 +126,8 @@ public class PlayController{
     @FXML
     private Text name2;
 
-
-
-
-
     private Timeline timeline = new Timeline() ;
-    private List<Pane> paneList; // not exist -> need to declare
+    private List<Pane> paneList;
     private Competitors players;
     private Board board;
     int numberOfCells;
@@ -142,15 +138,20 @@ public class PlayController{
         this.numberOfCells = board.getNumSquares() +board.getNumHalfCircles();
     }
 
-
     @FXML
     public void initialize() {
 
+        //SET DISPLAY
+        paneList = Arrays.asList(cell00, cell01, cell02, cell03, cell04,cell05,cell06,cell07,cell08,cell09,cell10,cell11);
         helpScreen.setVisible(false);
-        
         name1.setText(players.getPlayer1().getName());
         name2.setText(players.getPlayer2().getName());
+        endGameScreen.setVisible(false);
+        turnPlayer1.setVisible(false);
+        turnPlayer2.setVisible(false);
+        this.setDisplay(board);
 
+        //SET ACTION
         btnHelp.setOnAction(event -> {
             helpScreen.setVisible(true);
         });
@@ -166,7 +167,7 @@ public class PlayController{
                 Parent root = fxmlLoader.load();
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
-                stage.setTitle("Home Screen");
+                stage.setTitle("O An Quan Home Screen");
                 stage.show();
         
                 // Close the current stage (optional)
@@ -177,12 +178,6 @@ public class PlayController{
             }
         });
         
-
-        //set 2 frame invisible
-        turnPlayer1.setVisible(false);
-        turnPlayer2.setVisible(false);
-        paneList = Arrays.asList(cell00, cell01, cell02, cell03, cell04,cell05,cell06,cell07,cell08,cell09,cell10,cell11);
-
         //hide direction initially
         for (int i=0; i < numberOfCells; i++){
             Pane pane = paneList.get(i);
@@ -194,8 +189,7 @@ public class PlayController{
                 }
             }
         }
-        this.setDisplay(board);
-
+        
         //set play again button
         btnPlayAgain.setOnAction(event ->{
             endGameScreen.setVisible(false);
@@ -216,6 +210,7 @@ public class PlayController{
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/Home.fxml"));
                 Parent root = fxmlLoader.load();
                 Stage stage = new Stage();
+                stage.getIcons().add(new Image(getClass().getResourceAsStream("/view/images/icon.png")));
                 stage.setScene(new Scene(root));
                 stage.setTitle("Home Screen");
                 stage.show();
@@ -226,11 +221,10 @@ public class PlayController{
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            });
-        endGameScreen.setVisible(false);
+        });
+        
 
         //set cell clickable and set cell around is disable
-        
         for (int i=0; i < numberOfCells; i++) {
             int index = i;
             if ((i != 0) && (i != 6)){
@@ -332,10 +326,6 @@ public class PlayController{
 
                             }
 
-                            for (Cell cell : players.getItinerary()){
-                                System.out.println("location" + cell.getLocation() + "size" + cell.getGemList().size());
-                            }
-                            System.out.println(players.getPlayer1().getName() + "after print itinerary " + players.getPlayer1().getScore() + " "  + " " + players.getPlayer2().getScore());
                             //display number of gems
                             this.setMotionDisplay(players.getItinerary(), pane);
 
@@ -369,8 +359,6 @@ public class PlayController{
                 }
             }
             
-            
-
         }else{
             turnPlayer1.setVisible(false);
             turnPlayer2.setVisible(true);
@@ -384,16 +372,12 @@ public class PlayController{
                         pane.setDisable(false);
                 }
             }
-            
-            
         }
-
     }
 
     public void switchTurn(Pane paneChosen){
     
         if (players.getTurn() == 1){
-
             // display turn
             turnPlayer1.setVisible(false);
             turnPlayer2.setVisible(true);
@@ -409,9 +393,7 @@ public class PlayController{
             }
             //set new turn
             players.setTurn(2);
-        
         }else{
-
             // display turn
             turnPlayer1.setVisible(true);
             turnPlayer2.setVisible(false);
@@ -470,7 +452,7 @@ public class PlayController{
     public void setMotionDisplay(List<Cell> itinerary, Pane paneChosen) {
     
         List<Node> children = paneChosen.getChildren();
-        // Set both direction buttons in the pane to invisible
+        // Set both direction buttons in the pane to invisible after clicking
         for (Node child : children) {
             if (child instanceof ImageView) {
                 child.setVisible(false);
@@ -484,41 +466,36 @@ public class PlayController{
             for (int i = 0; i < longDisplay ; i++){
                 int index = i;
                 Cell cell = itinerary.get(index);
-                System.out.println("Run location" + cell.getLocation() + "Run size" + cell.getGemList().size());
-
                 int id = cell.getLocation();
                 Pane pane = paneList.get(id);
-                
-            
                 timeline.getKeyFrames().addAll(new KeyFrame(Duration.seconds(i*0.5), event -> { // time to display
                 if (!board.endGame()){
-
-                        for (Node child : pane.getChildren()) {
-                            if (child instanceof Text) {
-                                Text text = (Text) child; //downcasting
-                                if (child.getId().startsWith("numGems")) {
-                                    text.setText(Integer.toString(cell.getGemList().size()));
-                                }if (child.getId().startsWith("small")) {
-                                    text.setText("*".repeat(cell.getNumberOfSmallGems()));
-                                }
-                                if (child.getId().startsWith("big")) {
-                                    text.setText("*".repeat(cell.getNumberOfBigGems()));
-                                }
+                        
+                    for (Node child : pane.getChildren()) {
+                        if (child instanceof Text) {
+                            Text text = (Text) child; //downcasting
+                            if (child.getId().startsWith("numGems")) {
+                                text.setText(Integer.toString(cell.getGemList().size()));
+                            }if (child.getId().startsWith("small")) {
+                                text.setText("*".repeat(cell.getNumberOfSmallGems()));
+                            }
+                            if (child.getId().startsWith("big")) {
+                                text.setText("*".repeat(cell.getNumberOfBigGems()));
                             }
                         }
-                    
+                    }
+
+                    System.out.println("location "+ itinerary.get(index).getLocation() + " " + itinerary.get(index).getGemList().size() + " " + cell.getNumberOfSmallGems() + " " + cell.getNumberOfBigGems());
+
                     if (index == longDisplay-1){
                         scorePlayer2.setText(Integer.toString(players.getPlayer1().getScore()));
                         scorePlayer1.setText(Integer.toString(players.getPlayer2().getScore()));
                         switchTurn(paneChosen);
-                        
-                    }
-                    
+                    } 
                 }
 
                 if (board.endGame()){ // it actually always true because results were computed before
-     
-
+    
                     for (Node child : pane.getChildren()) {
                         if (child instanceof Text) {
                             Text text = (Text) child; //downcasting
@@ -531,7 +508,7 @@ public class PlayController{
                             }
                         }
                     }
-
+                    System.out.println("location "+ itinerary.get(index).getLocation() + " " + itinerary.get(index).getGemList().size() + " " + cell.getNumberOfSmallGems() + " " + cell.getNumberOfBigGems());
 
                     if (index == longDisplay - 1){
                         players.resetCreditHistory();
@@ -541,25 +518,11 @@ public class PlayController{
                         winnerScore1.setText(Integer.toString(players.getPlayer1().getScore()));
                         winnerScore2.setText(Integer.toString(players.getPlayer2().getScore()));
                     }
-                    
-
                 }
-                
             }));
-            
             }
-
         }
         timeline.play();
-
     }
-        
-        
-    
-    
-
-    
-
-    
 
 }
