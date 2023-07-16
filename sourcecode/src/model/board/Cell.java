@@ -10,7 +10,6 @@ public abstract class Cell implements Cloneable{
     private int location;
     private int numberOfGems;
     private List<Gem> gemList = new ArrayList<Gem>();
-    private boolean isEarnedCell = false;
 
     public Cell(int location, int numberOfGems) {
         this.location = location;
@@ -87,13 +86,8 @@ public abstract class Cell implements Cloneable{
         return null;
     }
 
-    public void setEarnedCell(){
-        this.isEarnedCell = true;
-    }
-
-    public boolean isEarnedCell(){
-        return this.isEarnedCell;
-    }
+  
+    
 
    
 

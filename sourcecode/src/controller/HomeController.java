@@ -17,20 +17,17 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.board.Board;
-import model.player.Players;
+import model.player.Competitors;
+import model.player.Player;
 import javafx.scene.Node;
 
 public class HomeController {
     private Board board;
-    private Players player1;
-    private Players player2;
+    private Competitors players;
+  
 
 
-	public HomeController (Board board, Players player1, Players player2) {
-        this.board = board;
-        this.player1 = player1;
-        this.player2 = player2;
-    }
+
     public HomeController() {
 		// TODO Auto-generated constructor stub
 	}
@@ -106,11 +103,14 @@ public class HomeController {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/Play.fxml"));
 
-                Board board = new Board();
+                board = new Board();
                 String player1Name = name1Box.getText(); // need to enter to avoid mistake same " ", 
                 String player2Name = name2Box.getText(); //can add exception
-                Players player = new Players(player1Name, player2Name, board);
-                fxmlLoader.setController(new PlayController(player, board));
+                Player player1 = new Player(player1Name);
+                Player player2 = new Player(player2Name);
+                
+                players = new Competitors(player1, player2, board);
+                fxmlLoader.setController(new PlayController(players));
                 Parent root = fxmlLoader.load();
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 

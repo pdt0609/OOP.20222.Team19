@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.board.Board;
 import model.board.Cell;
-import model.player.Players;
+import model.player.Competitors;
 
 
 public class PlayController{
@@ -113,11 +113,11 @@ public class PlayController{
     @FXML
     private Text winnerScore2;
 
-    @FXML
-    private Text player1Winner;
+    // @FXML
+    // private Text player1Winner;
 
-    @FXML
-    private Text player2Winner;
+    // @FXML
+    // private Text player2Winner;
 
     @FXML
     private AnchorPane helpScreen;
@@ -131,30 +131,19 @@ public class PlayController{
     @FXML
     private Text name2;
 
-
-
-
-
     private Timeline timeline = new Timeline() ;
     private List<Pane> paneList; // not exist -> need to declare
-    private Players players;
-    private static Board board;
+    private Competitors players;
+    private static Board board; //not need static, we share in only instances
     int numberOfCells;
 
-    public PlayController(Players players, Board board) {
+    public PlayController(Competitors players) {
         this.players = players;
-        PlayController.board = board;
-        this.numberOfCells = board.getNumSquares() +board.getNumHalfCircles();
-        this.player1Name = players.getPlayer1();
-        this.player2Name = players.getPlayer2();
+        PlayController.board = players.getBoard();
+        this.numberOfCells = board.getNumSquares() + board.getNumHalfCircles();
+        this.player1Name = players.getPlayer1().getName();
+        this.player2Name = players.getPlayer2().getName();
     }
-
-
-
-    // @FXML
-    // public void btnBackFromHomeControllerClicked(ActionEvent event) {
-        
-    // }
 
     @FXML
     public void initialize() {
@@ -196,8 +185,12 @@ public class PlayController{
         //set 2 frame invisible
         turnPlayer1.setVisible(false);
         turnPlayer2.setVisible(false);
-        paneList = Arrays.asList(cell00, cell01, cell02, cell03, cell04,cell05,cell06,cell07,cell08,cell09,cell10,cell11);
-
+        endGameScreen.setVisible(false);
+        // paneList = Arrays.asList(cell00, cell01, cell02, cell03, cell04,cell05,cell06,cell07,cell08,cell09,cell10,cell11);
+        paneList = Arrays.asList(
+            cell00, cell01, cell02, cell03, cell04, cell05, cell06,
+            cell07, cell08, cell09, cell10, cell11
+    );
         //hide direction initially
         for (int i=0; i < numberOfCells; i++){
             Pane pane = paneList.get(i);
@@ -216,7 +209,9 @@ public class PlayController{
             endGameScreen.setVisible(false);
             //reset board
             board = new Board();
-            players = new Players(player1Name,player2Name, board);
+            //reset players
+            players.getPlayer1().setScore(0);
+            players.getPlayer2().setScore(0);
             initialize();
             //display
             this.setDisplay(board);
@@ -239,7 +234,7 @@ public class PlayController{
                 e.printStackTrace();
             }
             });
-        endGameScreen.setVisible(false);
+       
 
         //set cell clickable and set cell around is disable
         
@@ -250,16 +245,18 @@ public class PlayController{
                 pane.setOnMouseClicked(event -> {
 
                     if (board.getCells()[index].getGemList().size() == 0){
+                        System.out.println(board.getCells()[index].getGemList().size());
                         pane.setDisable(false);
-                        System.out.println("Cell could not be clicked");
+                        System.out.println("Cell could not be clicked"+ board.getCells()[index].getGemList().size());
                         if (players.getTurn() == 1){
-                            if (players.checkNoGemsOnSide(player1Name)){
-                                if (players.getScore(player1Name) >= 5){
-                                    players.reduceScore(player1Name);
+
+                            if (players.checkNoGemsOnSide(players.getPlayer1())){
+                                if (players.getPlayer1().getScore() >= 5){
+                                    players.reduceScore(players.getPlayer1());
                                     this.setDisplay(board);
                                 }
-                                else if (players.getScore(player1Name) < 5 && players.getScore(player2Name) >= 5){
-                                    players.borrow(player1Name, player2Name);
+                                else if (players.getPlayer1().getScore() < 5 && players.getPlayer2().getScore() >= 5){
+                                    players.borrow(players.getPlayer1(),players.getPlayer2());
                                     this.setDisplay(board);
                         
                                 }
@@ -268,16 +265,19 @@ public class PlayController{
 
                         }
                         else if (players.getTurn() == 2){
-                            if (players.checkNoGemsOnSide(player2Name)){
-                                if (players.getScore(player2Name) >= 5){
-                                    players.reduceScore(player2Name);
+
+                            if (players.checkNoGemsOnSide(players.getPlayer2())){
+                                if (players.getPlayer2().getScore() >= 5){
+                                    players.reduceScore(players.getPlayer2());
                                     this.setDisplay(board);
                                 }
-                                else if (players.getScore(player2Name) < 5 && players.getScore(player1Name) >= 5){
-                                    players.borrow(player2Name,player1Name);
+                                else if (players.getPlayer2().getScore() < 5 && players.getPlayer1().getScore() >= 5){
+                                    players.borrow(players.getPlayer2(),players.getPlayer1());
                                     this.setDisplay(board);
                                 }
+                                // do not consider if both players have score < 5, it is impossible
                             }
+
                         }
                     }
 
@@ -311,6 +311,9 @@ public class PlayController{
 
                         imageView.setOnMouseClicked(event1 -> {
                             System.out.println("Direction clicked");
+                            for (Cell cell: board.getCells()){
+                                System.out.println("location" + cell.getLocation() + "size" + cell.getGemList().size());
+                            }
 
                             // Set the direction
                             if (imageView.getId().startsWith("btnCCL")) {
@@ -322,20 +325,11 @@ public class PlayController{
                             //spread gems
                             if (players.getTurn() == 1){
 
-                                players.spreadGems(player1Name,index, players.getDirection());
+                                players.spreadGems(players.getPlayer1(),board.getCells()[index], players.getDirection());
 
                             }
                             else if (players.getTurn() == 2){
-                                players.spreadGems(player2Name,index, players.getDirection());
-                            }
-                            if (board.checkTotal()){
-                                for (Cell cell : board.getCells()){
-                                    System.out.println("error total"+"location" + cell.getLocation() + "size" + cell.getGemList().size());
-                                }
-                                for (Cell cell : players.getItinerary()){
-                                System.out.println("error total"+ "location" + cell.getLocation() + "size" + cell.getGemList().size());
-                                }
-                                
+                                players.spreadGems(players.getPlayer2(),board.getCells()[index], players.getDirection());
                             }
 
                             // fake end game
@@ -345,32 +339,20 @@ public class PlayController{
                             // check end game (inside)
                             if (board.endGame()){
                                 System.out.println("end game");
+                                winnerName.setText(players.getWinner());
                                 players.assembleSmallGems(players.getItinerary());
-                                if (players.getScore(player1Name) > players.getScore(player2Name)){
-                                    winnerName.setText("1");
-                                }
-                                else if (players.getScore(player1Name) < players.getScore(player2Name)){
-                                    winnerName.setText("2");
-                                }
-                                else{
-                                    winnerName.setText("draw");
-                                }
-                                winnerScore1.setText(Integer.toString(players.getScore(player1Name)));
-                                winnerScore2.setText(Integer.toString(players.getScore(player2Name)));
-
-                            }
 
                             for (Cell cell : players.getItinerary()){
                                 System.out.println("location" + cell.getLocation() + "size" + cell.getGemList().size());
                             }
-                            System.out.println(player1Name + "after print itinerary " + players.getScore(player1Name) + " " + player2Name + " " + players.getScore(player2Name));
+
                             //display number of gems
                             this.setMotionDisplay(players.getItinerary(), pane);
 
                             players.setItinerary(new ArrayList<Cell>());
  
                             event1.consume();
-                        });
+                    }});
 
 
                     }
@@ -490,8 +472,8 @@ public class PlayController{
             }
 
         }
-        scorePlayer2.setText(Integer.toString(players.getScore(player2Name)));
-        scorePlayer1.setText(Integer.toString(players.getScore(player1Name)));
+        scorePlayer1.setText(Integer.toString(players.getPlayer1().getScore()));
+        scorePlayer2.setText(Integer.toString(players.getPlayer2().getScore()));
     }
 
 
@@ -536,8 +518,8 @@ public class PlayController{
                         }
                     
                     if (index == longDisplay-1){
-                        scorePlayer1.setText(Integer.toString(players.getScore(player1Name)));
-                        scorePlayer2.setText(Integer.toString(players.getScore(player2Name)));
+                        scorePlayer1.setText(Integer.toString(players.getPlayer1().getScore()));
+                        scorePlayer2.setText(Integer.toString(players.getPlayer2().getScore()));
                         switchTurn(paneChosen);
                         
                     }
@@ -559,25 +541,19 @@ public class PlayController{
                             }
                         }
                     }
-                    // if (cell.isEarnedCell() && index < longDisplay - 10){//
-                    //     scorePlayer1.setText(Integer.toString(players.getScore(player1Name)));
-                    //     scorePlayer2.setText(Integer.toString(players.getScore(player2Name)));
-
-                    // }
 
                     if (index == longDisplay - 1){
                         players.resetCreditHistory();
                         endGameScreen.setVisible(true); //auto display borrow score, assemble score
-                        scorePlayer1.setText(Integer.toString(players.getScore(player1Name)));
-                        scorePlayer2.setText(Integer.toString(players.getScore(player2Name)));
-                        winnerScore1.setText(Integer.toString(players.getScore(player1Name)));
-                        winnerScore2.setText(Integer.toString(players.getScore(player2Name)));
+                        scorePlayer1.setText(Integer.toString(players.getPlayer1().getScore()));
+                        scorePlayer2.setText(Integer.toString(players.getPlayer2().getScore()));
+                        winnerScore1.setText(Integer.toString(players.getPlayer1().getScore()));
+                        winnerScore2.setText(Integer.toString(players.getPlayer1().getScore()));
                     }
-                    
-
-                }
                 
-            }));
+                }
+
+                }));
             
             }
 
