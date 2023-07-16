@@ -11,7 +11,7 @@ Le Thanh Thang 20194451    https://github.com/ltthangds86
 
 # Assignment of members:
 
-1,Pham Duc Thanh(40%):
+1, Pham Duc Thanh(40%):
 -	Design Board(40%) :board, cell.
 -	Test for board package and player package
 - Create Help.fxml 
