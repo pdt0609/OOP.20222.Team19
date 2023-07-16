@@ -1,5 +1,13 @@
 # OOP.20222.Team19
 
+This is a game about a traditional Vietnam game, called "O An Quan" or "Mandarin Square Capturing" in English
+
+The final submission (due 16th Jul, 2023) is pushed to the `release/version-1.0` branch.
+
+Update (17-Jul, 2023):
+- `hotfix/controller`: Fix bug in checkNoGemsOnSide method and score displayed
+
+
 # Members:
 Pham Duc Thanh 20210795          https://github.com/pdt0609
 
@@ -47,5 +55,6 @@ Run the Main.java file to start game from sourcecode/src.
 # Contact:
 Email: thiemdrem2003@gmail.com
 Email: Phamthanh060903@gmail.com
+
 
 
