@@ -1,15 +1,18 @@
+package test;
+
 
 import java.util.ArrayList;
 
 import model.board.Board;
 import model.board.Cell;
-import model.player.Player;
+import model.player.Players;
+
 
 public class PlayerTest {
     public static void main(String[] args) {
         Board board = new Board();
-        Cell[] boardList = board.getBoard();
-        Player player = new Player("Thanh","Thiem", board);  // plays in the upper part
+        Cell[] boardList = board.getCells();
+        Players player = new Players("Thanh","Thiem", board);  // plays in the upper part
 
         ArrayList<Cell> cellOnSide = new ArrayList<>();
 
