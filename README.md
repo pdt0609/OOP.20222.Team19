@@ -14,11 +14,11 @@ Le Thanh Thang 20194451          https://github.com/ltthangds86
 1, Pham Duc Thanh(40%):
 -	Design Board(40%) :board, cell.
 -	Test for board package and player package
-- Create Help.fxml 
+-   Create Help.fxml 
 -	Fix Home.fxml and Play.fxml
 -	Design HelpScreenController
-- Fix HomeController and PlayController
-- Design Use case and several class diagrams
+-   Fix HomeController and PlayController
+-   Design Use case and several class diagrams
 -	Writing report
 
 2, Nguyen Ba Thiem(40%):
@@ -30,12 +30,12 @@ Le Thanh Thang 20194451          https://github.com/ltthangds86
 -	Writing slide
 
 3, Doan Trong Tan(10%):
-- Implements Gem package, application
-- Fix playcontroller
+-  Implements Gem package, application
+
 
 4, Le Thanh Thang(10%):
--	Commit images, application
--	Fix test package
+-  Commit images, application
+-  Exception
 
 # Demo link:
 https://drive.google.com/file/d/1mNcLY3-gqm3WKQjpRUcIHK-mcl5Uk88G/view?pli=1
