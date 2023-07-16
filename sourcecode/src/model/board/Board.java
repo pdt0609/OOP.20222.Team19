@@ -36,8 +36,8 @@ public class Board { // is composed of cells, it can interact with cells/all met
 
     private void initializeCells() {
         cells = new Cell[this.numSquares + this.numHalfCircles];
-        cells[0] = new HalfCircle(0, numBigGems / 2);
-        cells[(this.numSquares + this.numHalfCircles) / 2] = new HalfCircle((this.numSquares + this.numHalfCircles) / 2, numBigGems / 2);
+        cells[0] = new HalfCircle(0);
+        cells[(this.numSquares + this.numHalfCircles) / 2] = new HalfCircle((this.numSquares + this.numHalfCircles) / 2);
     }
 
     private void addGemsToCells() {
@@ -46,8 +46,8 @@ public class Board { // is composed of cells, it can interact with cells/all met
         this.cells[0].addGem(bigGem1);
 
         for (int i = 1; i <= numSquares / 2; i++) {
-            this.cells[i] = new Square(i, this.numSmallGems / this.numSquares);
-            for (int j = 0; j < this.cells[i].getNumberOfGems(); j++) {
+            this.cells[i] = new Square(i);
+            for (int j = 0; j < this.numSmallGems/10; j++) {
                 Gem smallGem = new SmallGem();
                 this.cells[i].addGem(smallGem);
             }
@@ -57,8 +57,8 @@ public class Board { // is composed of cells, it can interact with cells/all met
         this.cells[(this.numSquares + this.numHalfCircles) / 2].addGem(bigGem2);
 
         for (int i = numSquares / 2 + 2; i <= numSquares + numHalfCircles - 1; i++) {
-            this.cells[i] = new Square(i, this.numSmallGems / this.numSquares);
-            for (int j = 0; j < cells[i].getNumberOfGems(); j++) {
+            this.cells[i] = new Square(i);
+            for (int j = 0; j < this.numSmallGems/10; j++) {
                 Gem smallGem = new SmallGem();
                 this.cells[i].addGem(smallGem);
             }
@@ -119,26 +119,6 @@ public class Board { // is composed of cells, it can interact with cells/all met
         }
 
         return true;
-    }
-
-    public boolean checkNoGemsOnSide(String player){ //if on player side, each square does not have any gems return true
-        if (player.equals("player1")){
-            for (Cell cell : this.getPlayer1Cells()){
-                if (cell.getGemList().size() > 0){
-                    return false;
-                }
-            }
-        }
-        else if (player.equals("player2")){
-            for (Cell cell : this.getPlayer2Cells()){
-                if (cell.getGemList().size() > 0){
-                    return false;
-                }
-            }
-        }
-
-        return true;
-
     }
 
 }

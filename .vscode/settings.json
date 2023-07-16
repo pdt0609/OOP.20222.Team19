@@ -9,5 +9,6 @@
         "/Users/nguyenbathiem/Downloads/javafx-sdk-20.0.1/lib/javafx.media.jar",
         "/Users/nguyenbathiem/Downloads/javafx-sdk-20.0.1/lib/javafx.swing.jar",
         "/Users/nguyenbathiem/Downloads/javafx-sdk-20.0.1/lib/javafx.web.jar"
-    ]
+    ],
+    "java.debug.settings.onBuildFailureProceed": true
 }
