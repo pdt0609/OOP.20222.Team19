@@ -43,5 +43,7 @@ https://drive.google.com/file/d/1mNcLY3-gqm3WKQjpRUcIHK-mcl5Uk88G/view?pli=1
 # Run the project
 Run the Main.java file to start game from sourcecode/src.
 
+# Contact:
+Email: Phamthanh060903@gmail.com
 
 

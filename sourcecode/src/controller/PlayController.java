@@ -4,16 +4,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -24,6 +29,9 @@ import javafx.util.Duration;
 import model.board.Board;
 import model.board.Cell;
 import model.player.Player;
+import myexception.AllEmptyCellOnSideException;
+import myexception.EmptyCellException;
+import myexception.WrongCellException;
 import model.player.Competitors;
 
 
@@ -126,6 +134,12 @@ public class PlayController{
     @FXML
     private Text name2;
 
+    @FXML
+    private Button btnExit;
+
+    @FXML 
+    private Button btnReplay;
+
     private Timeline timeline = new Timeline() ;
     private List<Pane> paneList;
     private Competitors players;
@@ -137,6 +151,25 @@ public class PlayController{
         this.board = players.getBoard();
         this.numberOfCells = board.getNumSquares() +board.getNumHalfCircles();
     }
+
+    @FXML
+    void btnExitGameClicked(ActionEvent event) {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Exit Confirmation");
+        alert.setHeaderText("Exit Game");
+        alert.setContentText("Are you sure you want to exit?");
+        Optional<ButtonType> res = alert.showAndWait();
+        if (res.get() == ButtonType.OK) {
+            // quit game
+            Stage stage = (Stage) btnExit.getScene().getWindow();
+            stage.close();
+        } else {
+            // close dialog
+            alert.close();
+        }
+    }
+
+    
 
     @FXML
     public void initialize() {
@@ -176,6 +209,17 @@ public class PlayController{
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        });
+
+        btnReplay.setOnAction(event -> {
+            board = new Board();
+            Player newPlayer1 = new Player(players.getPlayer1().getName());
+            Player newPlayer2 = new Player(players.getPlayer2().getName());
+
+            players = new Competitors(newPlayer1,newPlayer2, board);
+            initialize();
+            //display
+            this.setDisplay(board);
         });
         
         //hide direction initially
@@ -223,17 +267,28 @@ public class PlayController{
             }
         });
         
-
-        //set cell clickable and set cell around is disable
-        for (int i=0; i < numberOfCells; i++) {
+        for (int i = 0; i < numberOfCells; i++) {
             int index = i;
-            if ((i != 0) && (i != 6)){
+
+            if (i != 0 && i != 6) {
                 Pane pane = paneList.get(i);
                 pane.setOnMouseClicked(event -> {
-
-                    if (board.getCells()[index].getGemList().size() == 0){
-                        pane.setDisable(false);
-                        System.out.println("Cell could not be clicked");
+                    try {
+                        handleCellClick(pane, index);
+                    } catch (EmptyCellException e) {
+                        // Show an alert with the custom exception message
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error");
+                        alert.setHeaderText("Empty Cell");
+                        alert.setContentText(e.getMessage());
+                        alert.showAndWait();
+                    } catch (AllEmptyCellOnSideException e) {
+                        // Show an alert with the custom exception message
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error");
+                        alert.setHeaderText("All Empty Cells on Side");
+                        alert.setContentText(e.getMessage());
+                        alert.showAndWait();
                         if (players.getTurn() == 1){
                             if (players.checkNoGemsOnSide(players.getPlayer1())){
                                 if (players.getPlayer1().getScore() >= 5){
@@ -243,13 +298,11 @@ public class PlayController{
                                 else if (players.getPlayer1().getScore() < 5 && players.getPlayer2().getScore() >= 5){
                                     players.borrow(players.getPlayer1(), players.getPlayer2());
                                     this.setDisplay(board);
-                        
                                 }
                                 // do not consider if both players have score < 5, it is impossible
                             }
 
-                        }
-                        else if (players.getTurn() == 2){
+                        }else if (players.getTurn() == 2){
                             if (players.checkNoGemsOnSide(players.getPlayer2())){
                                 if (players.getPlayer2().getScore() >= 5){
                                     players.reduceScore(players.getPlayer2());
@@ -263,26 +316,12 @@ public class PlayController{
                             }
                         }
                     }
-
-                    else{
-                        System.out.println("Cell clicked");
-                        
-                        //show direction
-                        showDirection(pane);
-                        
-                        for (int j=0; j < numberOfCells ; j++){
-                            if (j != index ){
-                                Pane paneAround = paneList.get(j);
-                                paneAround.setDisable(true);
-                            }
-                        }
-                    }
                 });
             }
         }
 
         //set direction then spread gems of player 1
-        for (int i=0; i < numberOfCells; i++){
+        for (int i =0; i < numberOfCells; i++){
             int index = i;
             if ((i != 0) && (i != 6)){
                 Pane pane = paneList.get(index);
@@ -343,33 +382,65 @@ public class PlayController{
         // Initialize play
         Random rand = new Random();
         int randTurn = rand.nextInt(2) + 1;
-        players.setTurn(randTurn);
+        players.setTurn(1);
         if (players.getTurn() == 1){
 
             turnPlayer1.setVisible(true);
             turnPlayer2.setVisible(false);
-            //set able for cells 1
+            // set able for cells 1
             for (int i=0; i < numberOfCells; i++) {
                 if ((i != 0) && (i != 6)){
                     Pane pane = paneList.get(i);
-                    if (i < 6)
+                    if (i < 6){
                         pane.setDisable(false);
-                    else
-                        pane.setDisable(true);
+                    }
+                    else{
+                        //set opacity for text
+                        paneList.get(i).setDisable(true);
+                    }
+                        
                 }
             }
+            
             
         }else{
             turnPlayer1.setVisible(false);
             turnPlayer2.setVisible(true);
-            //set disable for cells 1
+            // set disable for cells 1
             for (int i=0; i < numberOfCells; i++) {
                 if ((i != 0) && (i != 6)){
                     Pane pane = paneList.get(i);
-                    if (i < 6)
+                    if (i < 6){
                         pane.setDisable(true);
+                    }
                     else
                         pane.setDisable(false);
+                }
+            }
+        }
+    }
+
+    private void handleCellClick(Pane pane, int index) throws EmptyCellException, AllEmptyCellOnSideException{
+        if (board.getCells()[index].getGemList().size() == 0) {
+            if (players.getTurn() == 1) {
+                if (players.checkNoGemsOnSide(players.getPlayer1())) {
+                    throw new AllEmptyCellOnSideException("Please take earned gems and put them into the empty cells on your side!\nTo do that, click OK then choose cell on your side, gems will be spread automatically!");
+                }
+            } else if (players.getTurn() == 2) {
+                if (players.checkNoGemsOnSide(players.getPlayer2())) {
+                    throw new AllEmptyCellOnSideException("Please take earned gems and put them into the empty cells on your side!\nTo do that, click OK then choose cell on your side, gems will be spread automatically!");
+                }
+            }
+            throw new EmptyCellException("Please click on a non-empty cell!");
+        } else {
+            System.out.println("Cell clicked");
+
+            // Show direction
+            showDirection(pane);
+            for (int j = 0; j < paneList.size(); j++) {
+                if (j != index) {
+                    Pane paneAround = paneList.get(j);
+                    paneAround.setDisable(true);
                 }
             }
         }
@@ -385,8 +456,10 @@ public class PlayController{
             for (int i=0; i < numberOfCells; i++) {
                 if ((i != 0) && (i != 6)){
                     Pane pane = paneList.get(i);
-                    if (i < 6)
+                    if (i < 6){
                         pane.setDisable(true);
+                        
+                    }
                     else
                         pane.setDisable(false);
                 }
@@ -401,8 +474,9 @@ public class PlayController{
             for (int i=0; i < numberOfCells; i++) {
                 if ((i != 0) && (i != 6)){
                     Pane pane = paneList.get(i);
-                    if (i < 6)
+                    if (i < 6){
                         pane.setDisable(false);
+                    }
                     else
                         pane.setDisable(true);
                 }
@@ -440,6 +514,9 @@ public class PlayController{
                     if (child.getId().startsWith("big")) {
                         text.setText("*".repeat(board.getCells()[i].getNumberOfBigGems()));
                     }
+                    
+
+                         
                 }
             }
 
