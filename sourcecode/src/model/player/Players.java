@@ -245,6 +245,7 @@ public class Players { //set action of players with board. Do not make for each 
                 
 
                 while (true) {
+                    
                     Cell cellChosen = board.getCells()[locationChosen].copyCell();
                     List<Gem> gemList = cellChosen.getGemList(); // pass by reference so need to copy avoid out of list exception
                     int numberOfGems = gemList.size();
