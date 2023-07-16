@@ -377,7 +377,7 @@
                   <Image url="@images/help-02.png" />
                </image>
             </ImageView>
-            <Button fx:id="btnContinue" layoutX="422.0" layoutY="529.0" mnemonicParsing="false" opacity="0.0" prefHeight="47.0" prefWidth="154.0" text="continue" />
+            <Button fx:id="btnContinue" layoutX="390.0" layoutY="515.0" mnemonicParsing="false" opacity="0.0" prefHeight="47.0" prefWidth="147.0" text="continue" />
          </children>
       </AnchorPane>
    </children>

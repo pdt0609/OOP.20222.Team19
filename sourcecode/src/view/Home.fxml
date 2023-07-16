@@ -45,7 +45,7 @@
                   <Image url="@images/help-01.png" />
                </image>
             </ImageView>
-            <Button fx:id="btnBack" layoutX="416.0" layoutY="528.0" mnemonicParsing="false" opacity="0.0" prefHeight="56.0" prefWidth="151.0" text="Back" />
+            <Button fx:id="btnBack" layoutX="400.0" layoutY="500.0" mnemonicParsing="false" opacity="0.0" prefHeight="50.0" prefWidth="151.0" text="Back" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="nameScreen" layoutX="130.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0">
@@ -56,32 +56,32 @@
                </image>
             </ImageView>
             <Button fx:id="btnFinalStart" layoutX="239.0" layoutY="307.0" mnemonicParsing="false" opacity="0.0" prefHeight="70.0" prefWidth="288.0" text="Enter" />
-            <TextField fx:id="name1Box" layoutX="300.0" layoutY="83.0" prefHeight="50.0" prefWidth="411.0" promptText="Enter your name">
+            <TextField fx:id="name1Box" layoutX="300.0" layoutY="96.0" prefHeight="50.0" prefWidth="411.0" promptText="Enter your name">
                <font>
                   <Font size="26.0" />
                </font>
             </TextField>
-            <TextField fx:id="name2Box" layoutX="299.0" layoutY="198.0" prefHeight="50.0" prefWidth="412.0" promptText="Enter your name">
+            <TextField fx:id="name2Box" layoutX="299.0" layoutY="201.0" prefHeight="50.0" prefWidth="412.0" promptText="Enter your name">
                <font>
                   <Font size="26.0" />
                </font>
             </TextField>
-            <Label layoutX="50.0" layoutY="149.0" text="The player 1  is " textFill="WHITE">
+            <Label layoutX="50.0" layoutY="149.0" text="The player 1 is " textFill="WHITE">
                <font>
                   <Font size="25.0" />
                </font>
             </Label>
-            <Label layoutX="50.0" layoutY="258.0" text="The player 2  is " textFill="WHITE">
+            <Label layoutX="50.0" layoutY="258.0" text="The player 2 is " textFill="WHITE">
                <font>
                   <Font size="25.0" />
                </font>
             </Label>
-            <Label fx:id="realName1" layoutX="220.0" layoutY="149.0" textFill="WHITE">
+            <Label fx:id="realName1" layoutX="210.0" layoutY="149.0" textFill="WHITE">
                <font>
                   <Font size="25.0" />
                </font>
             </Label>
-            <Label fx:id="realName2" layoutX="220.0" layoutY="258.0" textFill="WHITE">
+            <Label fx:id="realName2" layoutX="210.0" layoutY="258.0" textFill="WHITE">
                <font>
                   <Font size="25.0" />
                </font>
