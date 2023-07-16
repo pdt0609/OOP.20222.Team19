@@ -30,7 +30,7 @@ public class Main extends Application {
         primaryStage.setResizable(false);
 
         // Load model for view through its controller
-        HomeController homeController = new HomeController(); // or loader.getController();
+        HomeController homeController = loader.getController();
         loader.setController(homeController);
 
         // Display the stage
