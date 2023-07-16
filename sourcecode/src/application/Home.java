@@ -1,16 +1,14 @@
 package application;
 
-import controller.PlayController;
+import controller.HomeController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import model.board.Board;
-import model.player.Player;
 
-public class Play extends Application {
+public class Home extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -27,18 +25,15 @@ public class Play extends Application {
 
         FXMLLoader loader = new FXMLLoader();
         // Load view for the stage
-        loader.setLocation(getClass().getResource("/view/Play.fxml"));
+        loader.setLocation(getClass().getResource("/view/Home.fxml"));
         Parent rootLayout = loader.load();
         Scene scene = new Scene(rootLayout);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
 
-        Board board = new Board();
-        Player player = new Player("player1", "player2", board);
-        
-        PlayController playController = loader.getController();
-        playController.initialize(); // Call initialize method to set up the controller
-        
+        HomeController homeController = loader.getController();
+        homeController.initialize(); // Call initialize method to set up the controller
+
         // Display the stage
         primaryStage.show();
     }
