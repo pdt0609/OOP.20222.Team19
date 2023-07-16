@@ -28,6 +28,8 @@
       </Text>
       <Button fx:id="btnHome" layoutX="887.0" layoutY="15.0" mnemonicParsing="false" opacity="0.0" prefHeight="48.0" prefWidth="114.0" text="Home" />
       <Button fx:id="btnHelp" layoutX="892.0" layoutY="90.0" mnemonicParsing="false" opacity="0.0" prefHeight="44.0" prefWidth="104.0" text="Help" />
+      <Button fx:id="btnReplay" layoutX="892.0" layoutY="164.0" mnemonicParsing="false" opacity="0.0" prefHeight="36.0" prefWidth="104.0" text="Replay" />
+      <Button fx:id="btnExit" layoutX="22.0" layoutY="707.0" mnemonicParsing="false" onAction="#btnExitGameClicked" opacity="0.0" prefHeight="39.0" prefWidth="104.0" text="Exit" />
       <Pane fx:id="cell00" layoutX="24.0" layoutY="265.0" prefHeight="261.0" prefWidth="122.0">
          <children>
             <Text fx:id="smallGem00" fill="WHITE" layoutX="35.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="**************" wrappingWidth="90.0">
@@ -370,7 +372,7 @@
             </Text>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="helpScreen" layoutX="34.0" layoutY="92.0" opacity="100.0" prefHeight="600.0" prefWidth="960.0">
+      <AnchorPane fx:id="helpScreen" layoutX="34.0" layoutY="92.0" prefHeight="600.0" prefWidth="960.0">
          <children>
             <ImageView fitHeight="600.0" fitWidth="960.0" pickOnBounds="true" preserveRatio="true">
                <image>
