@@ -6,7 +6,7 @@ import java.util.List;
 
 import model.gem.*;
 
-public abstract class Cell implements Cloneable{
+public abstract class Cell{
     private int location;
     private List<Gem> gemList = new ArrayList<Gem>();
 

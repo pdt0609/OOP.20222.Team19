@@ -16,7 +16,7 @@ public class Competitors { //set action of players with board. Do not make for e
     private int turn;
     private int direction;
     private Board board;
-    private static LinkedHashMap<Integer, Integer> creditHistory = new LinkedHashMap<Integer, Integer>(); // (1,5) -> player 1 borrow 5 small gems form player 2. need to reset at new game
+    private LinkedHashMap<Integer, Integer> creditHistory = new LinkedHashMap<Integer, Integer>(); // (1,5) -> player 1 borrow 5 small gems form player 2. need to reset at new game
     private List<Cell> itinerary = new ArrayList<Cell>(); 
     
     public Competitors(Player player1, Player player2, Board board){ // need to construct player vs board at first
@@ -107,7 +107,7 @@ public class Competitors { //set action of players with board. Do not make for e
             }
         } 
         else if (player1.equals(playerTwo) && player2.equals(playerOne)){
-            player2.setScore(player2.getScore()-5);
+            player1.setScore(player2.getScore()-5);
             creditHistory.put(2, 5);
             for (int i = 0; i < 5; i++){
                 Gem smallGem = new SmallGem();
@@ -276,21 +276,18 @@ public class Competitors { //set action of players with board. Do not make for e
     }
 
     public boolean checkNoGemsOnSide(Player player){ //if on player side, each square does not have any gems return true
-        if (player.equals(player1)){
-            for (Cell cell : board.getPlayer1Cells()){
-                if (cell.getGemList().size() > 0){
+        for (int i = 1; i < board.getCells().length; i++){
+            if (player.equals(player1)){
+                if (i<6 && board.getCells()[i].getGemList().size() > 0){
+                    return false;
+                }
+            }
+            else if (player.equals(player2)){
+                if (i>6 && board.getCells()[i+board.getNumSquares()/2+1].getGemList().size() > 0){
                     return false;
                 }
             }
         }
-        else if (player.equals(player2)){
-            for (Cell cell : board.getPlayer2Cells()){
-                if (cell.getGemList().size() > 0){
-                    return false;
-                }
-            }
-        }
-
         return true;
 
     }

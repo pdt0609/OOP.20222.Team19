@@ -382,7 +382,7 @@ public class PlayController{
         // Initialize play
         Random rand = new Random();
         int randTurn = rand.nextInt(2) + 1;
-        players.setTurn(1);
+        players.setTurn(randTurn);
         if (players.getTurn() == 1){
 
             turnPlayer1.setVisible(true);

@@ -1,4 +1,4 @@
-package test;
+package model.test;
 
 import model.board.Board;
 import model.board.Cell;
