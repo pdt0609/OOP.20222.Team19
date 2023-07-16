@@ -131,30 +131,19 @@ public class PlayController{
     @FXML
     private Text name2;
 
-
-
-
-
     private Timeline timeline = new Timeline() ;
-    private List<Pane> paneList; // not exist -> need to declare
+    private List<Pane> paneList;
     private Players players;
-    private static Board board;
+    private Board board;
     int numberOfCells;
 
-    public PlayController(Players players, Board board) {
+    public PlayController(Players players) {
         this.players = players;
-        PlayController.board = board;
-        this.numberOfCells = board.getNumSquares() +board.getNumHalfCircles();
+        this.board= players.getBoard();
+        this.numberOfCells = board.getNumSquares() + board.getNumHalfCircles();
         this.player1Name = players.getPlayer1();
         this.player2Name = players.getPlayer2();
     }
-
-
-
-    // @FXML
-    // public void btnBackFromHomeControllerClicked(ActionEvent event) {
-        
-    // }
 
     @FXML
     public void initialize() {

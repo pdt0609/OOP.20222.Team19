@@ -110,7 +110,7 @@ public class HomeController {
                 String player1Name = name1Box.getText(); // need to enter to avoid mistake same " ", 
                 String player2Name = name2Box.getText(); //can add exception
                 Players player = new Players(player1Name, player2Name, board);
-                fxmlLoader.setController(new PlayController(player, board));
+                fxmlLoader.setController(new PlayController(player));
                 Parent root = fxmlLoader.load();
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 

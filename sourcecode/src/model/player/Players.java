@@ -26,8 +26,11 @@ public class Players { //set action of players with board. Do not make for each 
     public Players(String player1, String player2, Board board){ // need to construct player vs board at first
         this.player1 = player1;
         this.player2 = player2;
-        // Players.board = board;
         this.board =board;
+    }
+
+    public Board getBoard(){
+        return board;
     }
 
 
