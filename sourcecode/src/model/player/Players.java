@@ -5,38 +5,41 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javafx.scene.web.WebHistory.Entry;
 import model.board.Board;
 import model.board.Cell;
 import model.board.Pickable;
 import model.gem.*;
 
 public class Players { //set action of players with board. Do not make for each player, we set for all players -> Easy to keep track turn. Do not use inheritance here because children are actually instances of the same class
-    private int score1 = 0;
-    private int score2 = 0;
+    // private int score1 = 0;
+    // private int score2 = 0;
     private String player1;
     private String player2;
     private int turn;
     private Cell cellChosen;
     private int direction;
+    private Player playerOne;
+    private Player playerTwo;
     // private static Board board;
     private Board board;
     private static LinkedHashMap<Integer, Integer> creditHistory = new LinkedHashMap<Integer, Integer>(); // (1,5) -> player 1 borrow 5 small gems form player 2. need to reset at new game
     private List<Cell> itinerary = new ArrayList<Cell>(); 
     
     public Players(String player1, String player2, Board board){ // need to construct player vs board at first
-        this.player1 = player1;
-        this.player2 = player2;
-        // Players.board = board;
+        this.playerOne = new Player(player1);
+        this.playerTwo = new Player(player2);
         this.board =board;
+
     }
 
 
     public String getPlayer1(){
-        return player1;
+        return playerOne.getName();
     }
 
     public String getPlayer2(){
-        return player2;
+        return playerTwo.getName();
     }
 
     public int getDirection(){
@@ -73,30 +76,23 @@ public class Players { //set action of players with board. Do not make for each 
         return sum;
     }
     
-    public void computeScore(String player, int earnedScore){
-        if (player.equals(this.getPlayer1())){
-            this.score1 = this.score1 + earnedScore;
-        } 
-        else if (player.equals(this.getPlayer2())){
-            this.score2 = this.score2 + earnedScore;
-        }
-    }
 
     public void reduceScore(String player){  //default 5 gems borrowed
         reduceScore(player, 5);
     }
 
+
     public void reduceScore(String player, int score){
-        if (player.equals(this.getPlayer1())){
-            this.score1 = this.score1 - score;
-            for (int i = 0; i< score; i++){
+        if (player.equals(playerOne.getName())){
+            playerOne.setScore(playerOne.getScore()-score);
+            for (int i = 0; i < score; i++){
                 Gem smallGem = new SmallGem();
                 board.getCells()[i+1].addGem(smallGem);
             }
         } 
-        else if (player.equals(this.getPlayer2())){
-            this.score2 = this.score2 - score;
-            for (int i = 0; i< score; i++){
+        else if (player.equals(playerTwo.getName())){
+            playerTwo.setScore(playerTwo.getScore()-score);
+            for (int i = 0; i < score; i++){
                 Gem smallGem = new SmallGem();
                 board.getCells()[i+board.getNumSquares()/2+2].addGem(smallGem);
             }
@@ -105,7 +101,7 @@ public class Players { //set action of players with board. Do not make for each 
 
     public void borrow(String player1, String player2){ // 1 borrow 2
         if (player1.equals(this.getPlayer1()) && player2.equals(this.getPlayer2())){
-            this.score2 = this.score2 - 5;
+            playerTwo.setScore(playerTwo.getScore()- 5);
             creditHistory.put(1, 5);
             for (int i = 0; i < 5; i++){
                 Gem smallGem = new SmallGem();
@@ -113,7 +109,7 @@ public class Players { //set action of players with board. Do not make for each 
             }
         } 
         else if (player1.equals(this.getPlayer2()) && player2.equals(this.getPlayer1())){
-            this.score1 = this.score1 - 5;
+            playerOne.setScore(playerOne.getScore()-5);
             creditHistory.put(2, 5);
             for (int i = 0; i < 5; i++){
                 Gem smallGem = new SmallGem();
@@ -128,10 +124,10 @@ public class Players { //set action of players with board. Do not make for each 
     
     public int getScore(String player){
         if (player.equals(this.getPlayer1())){
-            return this.score1;
+            return playerOne.getScore();
         }
         else if (player.equals(this.getPlayer2())){
-            return this.score2;
+            return playerTwo.getScore();
         }
         return 0;
     }
@@ -153,10 +149,10 @@ public class Players { //set action of players with board. Do not make for each 
             cell.setEmpty();
 
             if (i<6){
-                this.computeScore(this.getPlayer1(), earnedScore);
+                playerOne.computeScore(earnedScore);
             }
             else if (i>6){
-                this.computeScore(this.getPlayer2(), earnedScore);
+                playerTwo.computeScore(earnedScore);
             }
             //save itinerary
             Cell copyCell = cell.copyCell();
@@ -168,11 +164,11 @@ public class Players { //set action of players with board. Do not make for each 
         // return borrowed gems
         for (Map.Entry<Integer, Integer> entry : creditHistory.entrySet()) {
             if (entry.getKey() == 1){
-                this.computeScore(player2, entry.getValue());
+                 playerTwo.computeScore(entry.getValue());
                 this.reduceScore(player1); // always maximum 5. defalt 5
             }
             else if (entry.getKey() == 2){
-                this.computeScore(player1, entry.getValue());
+                playerOne.computeScore(entry.getValue());
                 this.reduceScore(player2); // always maximum 5. defalt 5
             }
         }
@@ -234,7 +230,12 @@ public class Players { //set action of players with board. Do not make for each 
                     while ((nextStopCell.isEmpty()) && !(board.getNextCellClockwise(nextStopCell).isEmpty()) ){
                     Cell earnedCell = board.getNextCellClockwise(nextStopCell);
                     int earnedScore = earnScore(earnedCell);
-                    computeScore(player,earnedScore);
+                    if (playerOne.getName().equals(player)){
+                        playerOne.computeScore(earnedScore);
+                    }
+                    else if (playerTwo.getName().equals(player)){
+                        playerTwo.computeScore(earnedScore);
+                    }
                     // System.out.println(earnedScore);
                     earnedCell.setEmpty();
                     Cell copyEarnedCell = earnedCell.copyCell();
@@ -289,7 +290,11 @@ public class Players { //set action of players with board. Do not make for each 
                             copyEarnedCell.setEarnedCell();
                             itinerary.add(copyEarnedCell);
                             System.out.println("earned" + earnedCell.getLocation() + "size" + earnedCell.getGemList().size());
-                            this.computeScore(player, earnedScore);
+                            if (playerOne.getName().equals(player)) {
+                                playerOne.computeScore(earnedScore);
+                            } else if (playerTwo.getName().equals(player)) {
+                                playerTwo.computeScore(earnedScore);
+                            }
                             System.out.println(this.getPlayer1() + " while" + this.getScore("player1") + " " + "player2" + " " + this.getScore("player2"));
                             nextStopCell = board.getNextCellCounterClockwise(earnedCell);
                         }
@@ -340,7 +345,7 @@ public class Players { //set action of players with board. Do not make for each 
         Board board = new Board();
         Players player = new Players("player1", "player2", board);
         Cell cell = board.getCells()[9];
-        player.spreadGems("player2",9, 0);
+        player.spreadGems(player.getPlayer2(),9, 0);
         // System.out.println(player.getScore("player1"));
         // System.out.println(player.getScore("player2"));
         for (Cell cells : player.getItinerary()){
