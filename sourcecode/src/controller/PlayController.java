@@ -31,9 +31,7 @@ import model.board.Cell;
 import model.player.Player;
 import myexception.AllEmptyCellOnSideException;
 import myexception.EmptyCellException;
-import myexception.WrongCellException;
 import model.player.Competitors;
-
 
 public class PlayController{
 
@@ -149,7 +147,7 @@ public class PlayController{
     public PlayController(Competitors players) { // just use players to access data
         this.players = players;
         this.board = players.getBoard();
-        this.numberOfCells = board.getNumSquares() +board.getNumHalfCircles();
+        this.numberOfCells = board.getNumSquares() + board.getNumHalfCircles();
     }
 
     @FXML
@@ -168,8 +166,6 @@ public class PlayController{
             alert.close();
         }
     }
-
-    
 
     @FXML
     public void initialize() {
@@ -396,7 +392,7 @@ public class PlayController{
                     }
                     else{
                         //set opacity for text
-                        paneList.get(i).setDisable(true);
+                        pane.setDisable(true);
                     }
                         
                 }
@@ -424,14 +420,16 @@ public class PlayController{
         if (board.getCells()[index].getGemList().size() == 0) {
             if (players.getTurn() == 1) {
                 if (players.checkNoGemsOnSide(players.getPlayer1())) {
-                    throw new AllEmptyCellOnSideException("Please take earned gems and put them into the empty cells on your side!\nTo do that, click OK then choose cell on your side, gems will be spread automatically!");
+                    throw new AllEmptyCellOnSideException("Please take earned gems and put them into the empty cells on your side!\nTo do that, click OK then 5 gems will be spread automatically on your side!\nNote that: If you have less than 5 gems, you have to borrow from your opponent!");
                 }
+                throw new EmptyCellException("Please click on a non-empty cell!");
             } else if (players.getTurn() == 2) {
                 if (players.checkNoGemsOnSide(players.getPlayer2())) {
-                    throw new AllEmptyCellOnSideException("Please take earned gems and put them into the empty cells on your side!\nTo do that, click OK then choose cell on your side, gems will be spread automatically!");
+                    throw new AllEmptyCellOnSideException("Please take earned gems and put them into the empty cells on your side!\nTo do that, click OK then 5 gems will be spread automatically on your side!\nNote that: If you have less than 5 gems, you have to borrow from your opponent!");
                 }
+                throw new EmptyCellException("Please click on a non-empty cell!");
             }
-            throw new EmptyCellException("Please click on a non-empty cell!");
+            
         } else {
             System.out.println("Cell clicked");
 
@@ -521,8 +519,9 @@ public class PlayController{
             }
 
         }
-        scorePlayer2.setText(Integer.toString(players.getPlayer1().getScore()));
-        scorePlayer1.setText(Integer.toString(players.getPlayer2().getScore()));
+        scorePlayer1.setText(Integer.toString(players.getPlayer1().getScore()));
+        scorePlayer2.setText(Integer.toString(players.getPlayer2().getScore()));
+
     }
 
 
@@ -565,8 +564,8 @@ public class PlayController{
                     System.out.println("location "+ itinerary.get(index).getLocation() + " " + itinerary.get(index).getGemList().size() + " " + cell.getNumberOfSmallGems() + " " + cell.getNumberOfBigGems());
 
                     if (index == longDisplay-1){
-                        scorePlayer2.setText(Integer.toString(players.getPlayer1().getScore()));
-                        scorePlayer1.setText(Integer.toString(players.getPlayer2().getScore()));
+                        scorePlayer2.setText(Integer.toString(players.getPlayer2().getScore()));
+                        scorePlayer1.setText(Integer.toString(players.getPlayer1().getScore()));
                         switchTurn(paneChosen);
                     } 
                 }
@@ -590,8 +589,8 @@ public class PlayController{
                     if (index == longDisplay - 1){
                         players.resetCreditHistory();
                         endGameScreen.setVisible(true); //auto display borrow score, assemble score
-                        scorePlayer2.setText(Integer.toString(players.getPlayer1().getScore()));
-                        scorePlayer1.setText(Integer.toString(players.getPlayer2().getScore()));
+                        scorePlayer2.setText(Integer.toString(players.getPlayer2().getScore()));
+                        scorePlayer1.setText(Integer.toString(players.getPlayer1().getScore()));
                         winnerScore1.setText(Integer.toString(players.getPlayer1().getScore()));
                         winnerScore2.setText(Integer.toString(players.getPlayer2().getScore()));
                     }

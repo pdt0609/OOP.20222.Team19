@@ -283,7 +283,7 @@ public class Competitors { //set action of players with board. Do not make for e
                 }
             }
             else if (player.equals(player2)){
-                if (i>6 && board.getCells()[i+board.getNumSquares()/2+1].getGemList().size() > 0){
+                if (i>6 && board.getCells()[i].getGemList().size() > 0){
                     return false;
                 }
             }
