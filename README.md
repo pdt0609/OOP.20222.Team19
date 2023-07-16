@@ -40,7 +40,7 @@ Le Thanh Thang 20194451    https://github.com/ltthangds86
 # Demo link:
 https://drive.google.com/file/d/1mNcLY3-gqm3WKQjpRUcIHK-mcl5Uk88G/view?pli=1
 
-# Run our project
+# Run the project
 Run the Main.java file to start game from sourcecode/src.
 
 
