@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Competitors",
+            "request": "launch",
+            "mainClass": "model.player.Competitors",
+            "projectName": "OOP.20222.Team26_5d824c21"
+        },
+        {
+            "type": "java",
             "name": "LambdaExample",
             "request": "launch",
             "mainClass": "controller.LambdaExample",

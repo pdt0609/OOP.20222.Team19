@@ -11,55 +11,55 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.board.Board;
-import model.player.Players;
+import model.player.Player;
+import model.player.Competitors;
 import javafx.scene.Node;
 
 public class HomeController {
-    private Board board;
-    private Players player1;
-    private Players player2;
 
-
-	public HomeController (Board board, Players player1, Players player2) {
-        this.board = board;
-        this.player1 = player1;
-        this.player2 = player2;
-    }
-    public HomeController() {
-		// TODO Auto-generated constructor stub
-	}
+    public HomeController() {}
 	@FXML
     private Button btnAccessHelp;	
 	
 	@FXML
-    private Button btnStart;
-	
-	@FXML
 	private Button btnExit;
 
+    @FXML 
+    private Button btnBack;
+
     @FXML
-    void btnAccessHelpClicked(ActionEvent event) {
-        try {
-            final String HELP_SCREEN_FILE_PATH = "/view/HelpScreen.fxml";
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(HELP_SCREEN_FILE_PATH));
-            fxmlLoader.setController(new HelpScreenController(board, player1, player2));
-            Parent root = fxmlLoader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    private Button btnFinalStart;
 
-            // set new scene for current stage
-            stage.setScene(new Scene(root));
-            stage.setTitle("Help Screen");
-            stage.show();
+    @FXML
+    private Button btnStart;
 
-        } catch (IOException e) {
-            e.printStackTrace();
+    @FXML
+    private ImageView helpScreen;
 
-        }
+    @FXML
+    private TextField name1Box;
 
-    }
-    
+    @FXML
+    private TextField name2Box;
+
+    @FXML
+    private AnchorPane nameScreen;
+
+    @FXML
+    private Label realName1;
+
+    @FXML
+    private Label realName2;
+
+    @FXML
+    private AnchorPane tutorialScreen;
+
     @FXML
     void btnExitGameClicked(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -77,10 +77,16 @@ public class HomeController {
         }
 
     }
+
     @FXML
     public void initialize() {
-        btnStart.setOnAction(event -> {
-            System.out.println("Start button pressed");
+        tutorialScreen.setVisible(false);
+        nameScreen.setVisible(false);
+        realName1.textProperty().bind(name1Box.textProperty());
+        realName2.textProperty().bind(name2Box.textProperty());
+
+        btnFinalStart.setOnAction(event -> {
+            System.out.println("Final Start button pressed");
              // Close the current window (optional)
             Stage currentStage = (Stage) btnStart.getScene().getWindow();
             currentStage.close();
@@ -90,8 +96,10 @@ public class HomeController {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/Play.fxml"));
 
                 Board board = new Board();
-                Players player = new Players("player1", "player2", board);
-                fxmlLoader.setController(new PlayController(player, board));
+                Player player1 = new Player(name1Box.getText()); // need to enter to avoid mistake same " ", 
+                Player player2 = new Player(name2Box.getText());//can add exception
+                Competitors player = new Competitors(player1, player2, board);
+                fxmlLoader.setController(new PlayController(player));
                 Parent root = fxmlLoader.load();
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
@@ -105,5 +113,21 @@ public class HomeController {
             }
 
         });
-    }
+
+        btnAccessHelp.setOnAction(event -> {
+            System.out.println("Help button pressed");
+            tutorialScreen.setVisible(true);
+        });
+
+        btnBack.setOnAction(event -> {
+            System.out.println("Back button pressed");
+            tutorialScreen.setVisible(false);
+        });
+
+        btnStart.setOnAction(event -> {
+            System.out.println("Start button pressed");
+            nameScreen.setVisible(true);
+            
+        });}
 }
+

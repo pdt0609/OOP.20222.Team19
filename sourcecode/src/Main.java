@@ -30,8 +30,6 @@ public class Main extends Application {
         primaryStage.setResizable(false);
 
         // Load model for view through its controller
-        // Board board = new Board();
-        // Player player = new Player("player1", "player2", board);
         HomeController homeController = new HomeController(); // or loader.getController();
         loader.setController(homeController);
 
@@ -42,8 +40,9 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
 }
+
+
 
 
 
